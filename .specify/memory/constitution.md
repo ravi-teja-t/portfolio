@@ -1,50 +1,120 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Version change: unversioned template → 1.0.0 (first ratification)
+- Modified principles: none; template placeholders replaced. The five template principle slots
+  were expanded to nine, as specified by the project owner.
+- Added sections: Core Principles I-IX, Project Goal, Development Workflow, Governance
+- Removed sections: none
+- Templates: not modified. Dependent templates read this constitution at runtime.
+- Deferred placeholders: none
+- Follow-up TODOs (existing repo state that does not yet comply):
+  - Principle VII: src/lib/db.ts, src/app/api/health/route.ts and the SQLite reference in
+    README.md predate this constitution and conflict with "no database".
+  - Principle IV: framer-motion is a dependency; any use must meet the client-side JS limit.
+  - Principles I, II, IX: the build checks and Playwright smoke tests do not exist yet.
+-->
+
+# Ravi Teja Portfolio Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Upwork Compliance (NON-NEGOTIABLE)
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+- The site MUST NOT contain an email address, phone number, WhatsApp or Telegram link, contact
+  form, booking link, or link to a social profile that allows direct messages. This applies
+  everywhere on the site.
+- Every call to action MUST link to the Upwork profile.
+- An automated check MUST scan the built HTML for email addresses, phone numbers and banned
+  domains, and MUST fail the build if it finds any.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+**Rationale**: Visitors arrive from Upwork proposals. Offering contact outside Upwork puts the
+account at risk, and the site exists to serve that account.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### II. Truthful Content
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+- Every metric, client name and testimonial MUST be real and approved.
+- Placeholder values such as `[X]` MUST fail the production build.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**Rationale**: One invented or unfilled claim discredits the whole site in front of a client
+deciding whether to invite Ravi Teja to an interview.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### III. Content-Driven
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+- Case studies and service pages MUST live as MDX content files.
+- Adding a case study or service page MUST NOT require code changes.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**Rationale**: New work has to reach the site quickly, without engineering effort for each entry.
+
+### IV. Performance
+
+- Every page MUST score 95 or higher in every Lighthouse category.
+- Pages MUST render statically by default.
+- Client-side JavaScript MUST be kept to the minimum a page needs to function.
+
+**Rationale**: A client who clicks through from a proposal gives the site only a few seconds.
+
+### V. Mobile-First and Accessible
+
+- Every page MUST conform to WCAG 2.2 AA.
+- The hero headline and the Hire me on Upwork button MUST both fit on the first screen at 375px
+  wide.
+
+**Rationale**: The headline and the button are what convert a visitor, so both must be visible
+and usable without scrolling, on small screens and with assistive technology.
+
+### VI. Design Consistency
+
+- The design MUST use exactly one accent colour, and that colour MUST be used only for the Hire
+  me on Upwork button.
+- Spacing, colour and type values MUST come from shared design tokens.
+
+**Rationale**: Reserving the accent colour makes the button the most prominent thing on any page.
+
+### VII. Simplicity
+
+- v1 MUST NOT include a database, authentication or server-side user data.
+- Any AI demo added later MUST NOT ask for contact details.
+
+**Rationale**: The site's job is to present fixed content. Each of these adds cost and risk
+without helping a visitor decide to send an invite.
+
+### VIII. Privacy
+
+- Analytics MUST be cookieless.
+- The site MUST NOT need a cookie banner.
+
+**Rationale**: A consent banner would compete with the headline and the Hire me on Upwork button
+on the first screen.
+
+### IX. Quality Gates
+
+- TypeScript strict mode MUST stay enabled.
+- Linting MUST pass.
+- Playwright smoke tests MUST cover every page.
+- All gates MUST pass before any change is merged.
+
+**Rationale**: Automated gates keep the rules above true as content and code change.
+
+## Project Goal
+
+The site's only goal is to turn Upwork proposal clicks into interview invites. A page, section or
+feature that does not serve this goal MUST NOT be added.
+
+## Development Workflow
+
+- The production build MUST fail on any Principle I scan finding or Principle II placeholder.
+- Merging MUST be blocked until every Principle IX gate passes.
+- Every spec and plan MUST pass a constitution check before work proceeds.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution takes precedence over other project practices and documents.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+- **Amendments**: every amendment MUST include a written rationale and a version bump.
+- **Versioning**: versions follow semantic versioning.
+  - MAJOR: a principle or governance rule is removed or redefined incompatibly.
+  - MINOR: a principle or section is added, or guidance is materially expanded.
+  - PATCH: clarifications and wording changes that do not alter meaning.
+- **Compliance**: every spec and plan MUST pass a constitution check against the current version.
+
+**Version**: 1.0.0 | **Ratified**: 2026-11-06 | **Last Amended**: 2026-11-06
