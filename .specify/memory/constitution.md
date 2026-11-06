@@ -1,17 +1,18 @@
 <!--
 Sync Impact Report
-- Version change: unversioned template → 1.0.0 (first ratification)
-- Modified principles: none; template placeholders replaced. The five template principle slots
-  were expanded to nine, as specified by the project owner.
-- Added sections: Core Principles I-IX, Project Goal, Development Workflow, Governance
+- Version change: 1.0.0 → 1.2.0, through 1.1.0 (MINOR: guidance expanded, nothing removed)
+- Modified principles:
+  - I. Upwork Compliance: defines a call to action and allowed outbound domains
+  - IV. Performance: allows animation and interaction under conditions
+  - IX. Quality Gates: adds formatting, accessibility and Lighthouse checks
+- Added sections: Amendment history, under Governance
 - Removed sections: none
 - Templates: not modified. Dependent templates read this constitution at runtime.
 - Deferred placeholders: none
 - Follow-up TODOs (existing repo state that does not yet comply):
   - Principle VII: src/lib/db.ts, src/app/api/health/route.ts and the SQLite reference in
-    README.md predate this constitution and conflict with "no database".
-  - Principle IV: framer-motion is a dependency; any use must meet the client-side JS limit.
-  - Principles I, II, IX: the build checks and Playwright smoke tests do not exist yet.
+    README.md still exist. Tasks T001 and T002 remove them.
+  - Principles I, II, IX: the build checks and tests do not exist yet.
 -->
 
 # Ravi Teja Portfolio Constitution
@@ -23,7 +24,10 @@ Sync Impact Report
 - The site MUST NOT contain an email address, phone number, WhatsApp or Telegram link, contact
   form, booking link, or link to a social profile that allows direct messages. This applies
   everywhere on the site.
-- Every call to action MUST link to the Upwork profile.
+- Every call to action MUST link to the Upwork profile. A call to action is a Hire me on Upwork
+  button. Links that move a visitor around the site, such as See my work, are navigation.
+- Outbound links MUST go only to upwork.com or github.com. A GitHub link is allowed only if that
+  GitHub profile shows no email address.
 - An automated check MUST scan the built HTML for email addresses, phone numbers and banned
   domains, and MUST fail the build if it finds any.
 
@@ -49,7 +53,13 @@ deciding whether to invite Ravi Teja to an interview.
 
 - Every page MUST score 95 or higher in every Lighthouse category.
 - Pages MUST render statically by default.
-- Client-side JavaScript MUST be kept to the minimum a page needs to function.
+- Client-side JavaScript MUST be kept to the minimum a page needs to function, plus animation
+  and interaction that meet all of these conditions:
+  - The hero headline and the Hire me on Upwork button do not animate in.
+  - All content stays visible if scripts are off, fail or arrive late, and when a visitor
+    prefers reduced motion.
+  - Nothing that moves on its own runs longer than 5 seconds.
+  - The page still scores 95 or higher and stays within its script size limit.
 
 **Rationale**: A client who clicks through from a proposal gives the site only a few seconds.
 
@@ -89,8 +99,9 @@ on the first screen.
 ### IX. Quality Gates
 
 - TypeScript strict mode MUST stay enabled.
-- Linting MUST pass.
-- Playwright smoke tests MUST cover every page.
+- Linting and formatting checks MUST pass.
+- Playwright smoke tests and automated accessibility checks MUST cover every page.
+- Lighthouse checks MUST pass.
 - All gates MUST pass before any change is merged.
 
 **Rationale**: Automated gates keep the rules above true as content and code change.
@@ -117,4 +128,16 @@ This constitution takes precedence over other project practices and documents.
   - PATCH: clarifications and wording changes that do not alter meaning.
 - **Compliance**: every spec and plan MUST pass a constitution check against the current version.
 
-**Version**: 1.0.0 | **Ratified**: 2026-11-06 | **Last Amended**: 2026-11-06
+**Amendment history**:
+
+- **1.2.0 (2026-11-06)**: Principle IV widens "light animation" to animation and interaction,
+  and adds a 5 second limit on anything that moves on its own. Rationale: the owner wants a
+  more animated, interactive site. The conditions that protect first paint, visibility and
+  the score stay in place.
+- **1.1.0 (2026-11-06)**: Principle I defines a call to action and allowed outbound domains.
+  Principle IV allows light animation under conditions. Principle IX adds formatting,
+  accessibility and Lighthouse checks. Rationale: See my work is navigation and had no clear
+  basis under Principle I; the owner chose framer-motion, which isn't needed for a page to
+  function, and governance has no exception process; and Principle IV's score had no gate.
+
+**Version**: 1.2.0 | **Ratified**: 2026-11-06 | **Last Amended**: 2026-11-06
