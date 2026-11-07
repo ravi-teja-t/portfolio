@@ -1,0 +1,15 @@
+- value: "10"
+  label: sample metric one
+  approved: true
+- value: "20%"
+  label: sample metric two
+  approved: true
+- value: "30"
+  label: sample metric three
+  approved: true
+- value: "40x"
+  label: sample metric four
+  approved: true
+- value: "999"
+  label: unapproved sample metric
+  approved: false

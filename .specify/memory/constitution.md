@@ -1,9 +1,9 @@
 <!--
 Sync Impact Report
-- Version change: 1.0.0 → 1.2.0, through 1.1.0 (MINOR: guidance expanded, nothing removed)
+- Version change: 1.0.0 → 1.3.0, through 1.1.0 and 1.2.0 (MINOR: guidance expanded)
 - Modified principles:
   - I. Upwork Compliance: defines a call to action and allowed outbound domains
-  - IV. Performance: allows animation and interaction under conditions
+  - IV. Performance: allows animation under conditions, exempts noindex pages from SEO
   - IX. Quality Gates: adds formatting, accessibility and Lighthouse checks
 - Added sections: Amendment history, under Governance
 - Removed sections: none
@@ -51,7 +51,8 @@ deciding whether to invite Ravi Teja to an interview.
 
 ### IV. Performance
 
-- Every page MUST score 95 or higher in every Lighthouse category.
+- Every page MUST score 95 or higher in every Lighthouse category. Pages deliberately kept out
+  of search, such as the not-found page, are exempt from the SEO category only.
 - Pages MUST render statically by default.
 - Client-side JavaScript MUST be kept to the minimum a page needs to function, plus animation
   and interaction that meet all of these conditions:
@@ -130,6 +131,10 @@ This constitution takes precedence over other project practices and documents.
 
 **Amendment history**:
 
+- **1.3.0 (2026-11-06)**: Principle IV exempts pages deliberately kept out of search from the
+  SEO category. Rationale: Next.js marks the not-found page noindex, which is correct, and
+  Lighthouse scores any noindex page below 95, so the rule could not be met as written. Unlisted
+  case studies in feature 003 are in the same position.
 - **1.2.0 (2026-11-06)**: Principle IV widens "light animation" to animation and interaction,
   and adds a 5 second limit on anything that moves on its own. Rationale: the owner wants a
   more animated, interactive site. The conditions that protect first paint, visibility and
@@ -140,4 +145,4 @@ This constitution takes precedence over other project practices and documents.
   basis under Principle I; the owner chose framer-motion, which isn't needed for a page to
   function, and governance has no exception process; and Principle IV's score had no gate.
 
-**Version**: 1.2.0 | **Ratified**: 2026-11-06 | **Last Amended**: 2026-11-06
+**Version**: 1.3.0 | **Ratified**: 2026-11-06 | **Last Amended**: 2026-11-06

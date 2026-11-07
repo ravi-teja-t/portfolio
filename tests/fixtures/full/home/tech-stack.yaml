@@ -1,0 +1,12 @@
+- group: AI
+  items:
+    - name: Sample AI tool
+- group: Backend
+  items:
+    - name: Sample backend tool
+    - name: Another sample tool
+- group: Cloud and DevOps
+  items:
+    - name: Sample cloud tool
+- group: Healthcare
+  items: []

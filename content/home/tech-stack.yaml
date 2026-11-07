@@ -1,0 +1,23 @@
+- group: AI
+  items:
+    - name: AI agents
+    - name: RAG
+    - name: LLM integration
+- group: Backend
+  items:
+    - name: Java
+    - name: Spring Boot
+    - name: Microservices
+    - name: REST APIs
+    - name: PostgreSQL
+- group: Cloud and DevOps
+  items:
+    - name: AWS
+    - name: Docker
+    - name: Kubernetes
+    - name: CI/CD
+- group: Healthcare
+  items:
+    - name: HL7
+    - name: EHR data pipelines
+    - name: Integration engines

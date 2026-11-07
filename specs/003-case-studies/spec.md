@@ -176,5 +176,6 @@ Ravi adds a case study by adding one content file, with no code changes.
 - **Third case study**: if no healthcare client work can be shown, Ravi can use a backend project or a small public demo, as the portfolio plan suggests.
 - **Not ready yet**: a case study that isn't ready simply isn't added to content. There is no separate draft state.
 - **Images**: covers and architecture diagrams are generated from content at build time, as in feature 001. They're illustrations and diagrams, never fake screenshots.
+- **Not-found page**: feature 001 builds it. This feature adds the route to the Work index (FR-016).
 - **Dependencies**: this feature uses the top bar, footer and Hire button from feature 001. Features 001 and 002 read its content. When it ships, the Work link and case study cards switch from homepage sections to these pages.
 - **Content Ravi must supply**: the three case studies, with real before and after numbers, diagrams, and written client approvals.

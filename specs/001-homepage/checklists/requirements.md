@@ -29,7 +29,7 @@
 - [x] Feature meets measurable outcomes defined in Success Criteria
 - [x] No implementation details leak into specification
 
-## Constitution Check (v1.2.0)
+## Constitution Check (v1.3.0)
 
 - Passes Principles I to IX.
 - Principle I: See my work and service links are navigation, as v1.1.0 now states.

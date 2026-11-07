@@ -16,8 +16,10 @@ All data lives in files and is read at build time. There is no database and no r
 | `siteUrl` | URL | yes | The live address, `https://ravi-teja-t.github.io/portfolio`. Used for canonical addresses (FR-033) |
 | `name` | text | yes | Wordmark and footer name |
 | `tagline` | text | yes | Identity line, also the default page description |
-| `nav` | list of label and href | yes | Work to `#work`, Services to `#services`, About to `#about`, until features 002 to 004 switch them to pages |
+| `nav` | list of label and href | yes | Work to `/#work`, Services to `/#services`, About to `/#about`, until features 002 to 004 switch them to pages |
 | `hireLabel` | text | yes | "Hire me on Upwork" |
+| `menuLabel` | text | yes | Label for the phone menu and main navigation |
+| `skipLabel` | text | yes | Text for the skip link |
 | `footerLine` | text | yes | "Founder of Ango Digital Tech", rendered as plain text |
 
 ## Homepage content
@@ -33,6 +35,7 @@ One YAML file per block in `content/home/`.
 | `about.yaml` | no | `sentences` (exactly 3), optional `photo` (Real image), optional `linkLabel`, shown once the About page exists |
 | `faq.yaml` | no | List of FAQ item |
 | `closing.yaml` | yes | `headline` |
+| `not-found.yaml` | yes | `heading`, `text`, `homeLabel` |
 | `sections.yaml` | yes | Heading text for each section (FR-020) |
 
 ## Metric
@@ -76,6 +79,10 @@ A group with no items is hidden.
 ## Generated images
 
 Every image is generated at build time, so content needs no image fields. Names and sizes follow a fixed convention in `scripts/generate-images.mjs`, which is also how `ResponsiveImage` gets explicit `width` and `height`. See research R4.
+
+Colours are read from the tokens in `src/app/globals.css`, so they have one source. The accent is excluded.
+
+Generated images use empty `alt` text, because the title or name always sits next to them as real text.
 
 ## Real image
 
@@ -130,6 +137,8 @@ These run in the loader, before any page sees the data.
 | Approval filter | Unapproved metrics and testimonials are removed, so they can't reach the built output |
 | Featured work | Listed case studies sorted by `order`, first three kept |
 | See my work | Shown only if featured work has at least 1 item |
+| Visible nav | A link to a homepage section is removed when that section is hidden |
+| Card link | A card links to its page only when `hasPage` is true |
 | Section visibility | A section displays only when it has at least 1 item to show |
 
 Placeholders are caught twice: in raw content by the loader, so one in an item that isn't displayed still fails, and in built pages by the compliance scan. See [contracts/build-checks.md](./contracts/build-checks.md).

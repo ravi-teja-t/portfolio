@@ -15,8 +15,6 @@
 # production
 /build
 
-# sqlite database
-/data/
 
 # misc
 .DS_Store
@@ -40,3 +38,10 @@ next-env.d.ts
 
 # python
 __pycache__/
+
+# test and build output
+.fixture-out/
+.lighthouseci/
+playwright-report/
+test-results/
+public/images/generated/

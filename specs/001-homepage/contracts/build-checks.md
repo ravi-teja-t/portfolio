@@ -4,13 +4,14 @@
 
 | Command | Does | Fails when |
 |---|---|---|
-| `pnpm build` | Generates images, builds to `out/`, then runs the compliance scan | Content is invalid, or the scan finds anything |
+| `pnpm build` | Generates images, builds to `out/`, removes scripts from the not-found page, then runs the compliance scan | Content is invalid, or the scan finds anything |
 | `pnpm lint` | ESLint | Any lint error |
 | `pnpm format:check` | Prettier | Any unformatted file |
 | `pnpm typecheck` | `tsc --noEmit` in strict mode | Any type error |
 | `pnpm test:checks` | Proves the scan and content validation catch bad input | A bad input gets through |
-| `pnpm test:e2e` | Builds fixtures, runs Playwright and axe | Any test or violation |
-| `pnpm test:lighthouse` | Audits the homepage on phone and desktop settings, using the median of 3 runs | Performance, accessibility, best practices or SEO is under 95, or scripts exceed 220 KB compressed |
+| `pnpm test:e2e` | Builds the test and real content, runs Playwright and axe | Any test or violation |
+| `pnpm test:lighthouse` | Audits the homepage and not-found page on test and real content, on phone and desktop settings, using the median of 3 runs. Run `test:e2e` first, because it uses those builds | Performance, accessibility, best practices or SEO is under 95, or scripts exceed 220 KB compressed |
+| `pnpm site:deploy` | Runs every gate, builds with the `/portfolio` base path, then publishes `out/` to the `gh-pages` branch | Any gate fails, or there are uncommitted changes |
 | `pnpm images` | Generates images on their own, for use with `next dev` | The generator can't write an image |
 
 All checks exit non-zero on failure and print the file, the rule and the match.
@@ -50,19 +51,28 @@ Content validation runs in the loader during the build. It also rejects placehol
 
 ## Continuous integration
 
-`.github/workflows/quality.yml` runs on every pull request to `main`: ESLint, Prettier, typecheck, `test:checks`, `test:e2e`, `test:lighthouse`.
+`.github/workflows/quality.yml` runs on every pull request to `main` and every push to `main`: ESLint, Prettier, typecheck, `test:checks`, `test:e2e`, `test:lighthouse`. It doesn't deploy.
 
-A required status check on `main` must be turned on in GitHub for this to block merges.
+A required status check on `main` must be turned on in GitHub for this to block merges. Direct pushes to `main` are checked after the fact, but they can't change the live site.
 
 ## Deployment
 
-`.github/workflows/deploy.yml` runs on every push to `main`: it sets `PAGES_BASE_PATH` from `actions/configure-pages`, runs `pnpm build`, and publishes `out/` with `actions/upload-pages-artifact` and `actions/deploy-pages`. A failed scan stops the deploy.
+GitHub Actions doesn't deploy. `pnpm site:deploy` runs `scripts/deploy.mjs` on Ravi's machine:
+
+1. Stop if there are uncommitted changes.
+2. Run lint, format, typecheck, `test:checks`, `test:e2e` and `test:lighthouse`, stopping at the first failure.
+3. Run `pnpm build` with `PAGES_BASE_PATH=/portfolio`.
+4. Publish `out/` with `gh-pages -d out -b gh-pages --nojekyll`, using the source commit in the message.
+
+The script is `site:deploy` because `pnpm deploy` is a built-in pnpm command.
 
 | Setting | Value |
 |---|---|
 | Site address | `https://ravi-teja-t.github.io/portfolio/` |
-| Repo setting | Settings, Pages, Source: GitHub Actions |
+| Repo setting | Settings, Pages, Source: Deploy from a branch, `gh-pages`, root folder |
 | Node version | `.node-version` in the repo |
 | pnpm version | `packageManager` in `package.json` |
+
+`--nojekyll` is required, because Jekyll would otherwise remove the `_next` folder.
 
 GitHub Pages can't set custom security headers and has no preview deploys.

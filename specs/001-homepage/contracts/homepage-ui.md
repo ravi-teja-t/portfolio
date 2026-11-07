@@ -43,9 +43,11 @@ The accent colour may appear only on `[data-hire]` elements.
 - Reaching an element by link, keyboard or in-page search brings it into the viewport, which reveals it.
 - A near-black line under the top bar shows scroll progress, and the current section is marked in the top bar.
 - In `how-i-work`, a line draws along the steps as the visitor scrolls.
-- Cards lift on hover and focus. Hover effects apply only on devices that hover.
+- Cards with a link lift on hover and focus. Cards without one don't. Hover effects apply only on devices that hover.
 - The hero illustration draws itself once, in under 4 seconds. Nothing that moves on its own runs longer than 5 seconds.
-- Client components live only in `src/components/motion/`.
+- Client components live only in `src/components/motion/`. The progress line and how I work line are CSS scroll-driven animations, not client components.
+- Components render the same HTML whatever the motion setting, so hydration never fails.
+- The not-found page ships no scripts.
 
 ## Other interactions
 
@@ -56,13 +58,14 @@ The accent colour may appear only on `[data-hire]` elements.
 | Case study card | Contains a link to `/work/<slug>` when `hasPage` is true. Otherwise no link |
 | FAQ item | `details` element with a `summary` question |
 | Top bar | Stays fixed at the top while scrolling. `scroll-padding-top` keeps link targets and keyboard focus clear of it |
-| Top bar links | From `nav`, going to homepage sections until features 002 to 004 switch them to pages. Reachable at 375 pixels wide, through a native `details` menu on narrow screens |
+| Top bar links | From `nav`, going to homepage sections until features 002 to 004 switch them to pages. A link to a hidden section is absent. Reachable at 375 pixels wide, through a native `details` menu on narrow screens, which closes when a link is selected |
+| Not-found page | Top bar, footer, heading and text from content, a link to the homepage, and a Hire button |
 
 ## Viewports
 
 | Size | Rule |
 |---|---|
-| 375 by 553 | `h1` and at least one `[data-hire]` are fully inside the viewport on load |
+| 375 by 553 | `h1` and at least one `[data-hire]` are fully inside the viewport on load, on test and real content |
 | 320 wide | No horizontal scrolling |
 
 In the hero on narrow screens, the order is headline, subhead, Hire button, See my work, trust line, photo.
@@ -73,7 +76,7 @@ In the hero on narrow screens, the order is headline, subhead, Hire button, See 
 - No cookies are set, and no third-party scripts are loaded.
 - No requests go to font services.
 - Every interactive element is at least 44 by 44 pixels.
-- The canonical address has no query string.
+- The homepage states a canonical address with no query string. Canonicals are set per page, never in the root layout. Test builds leave them out, because Lighthouse fails a canonical on another domain.
 - Every link and asset works under the `/portfolio/` base path and at the site root.
 - Adding `?src=<anything>` changes nothing on the page.
 - Every element is reachable and usable by keyboard, with a visible focus indicator.

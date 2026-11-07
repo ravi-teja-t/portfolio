@@ -29,7 +29,7 @@
 - [x] Feature meets measurable outcomes defined in Success Criteria
 - [x] No implementation details leak into specification
 
-## Constitution Check (v1.2.0)
+## Constitution Check (v1.3.0)
 
 - Passes Principles I to IX.
 - Principle VIII: FR-004 requires that videos set no cookies on page load, which rules out a standard video embed.

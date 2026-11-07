@@ -1,0 +1,10 @@
+- question: Do you work fixed price or hourly?
+  answer: Fixed price by milestone is my default, so you know the cost before work starts. Hourly suits open-ended work.
+- question: Who owns the code?
+  answer: You own the code you pay for. Handover includes the code, the docs and a walkthrough video.
+- question: Will you sign an NDA?
+  answer: Yes, a reasonable NDA is fine.
+- question: How do we communicate?
+  answer: On Upwork, with a weekly demo and a written update.
+- question: How do you handle patient data?
+  answer: Real patient data stays out of development and testing, where I use test data instead. I follow your security and compliance requirements.

@@ -47,16 +47,17 @@ A client opens the proposal link on a phone and sees the headline and the Hire b
 
 ### User Story 3 - Go to a matching service (Priority: P2)
 
-A client who cares about one kind of work clicks that service card and goes to that service's page.
+A client who cares about one kind of work reads that service's card. Once the service page exists, the card links to it.
 
 **Why this priority**: Service pages are the most persuasive pages for a specific need, but they are a secondary path from the homepage.
 
-**Independent Test**: Select the link on each service card and confirm it goes to that service's page. This needs feature 002 to be complete.
+**Independent Test**: Confirm each card shows its fields. The link appears on a card once feature 002 provides its page.
 
 **Acceptance Scenarios**:
 
 1. **Given** the services section, **When** the client reads a card, **Then** they see an outcome headline, one line of description and three example deliverables.
-2. **Given** a service card, **When** the client selects its link, **Then** they arrive at that service's page.
+2. **Given** a service card whose page exists, **When** the client selects its link, **Then** they arrive at that service's page.
+3. **Given** a service card whose page doesn't exist yet, **When** the client views it, **Then** it has no link and doesn't look clickable.
 
 ---
 
@@ -99,6 +100,8 @@ Ravi may add a source tag to a proposal link, such as `?src=upwork-chatbot`. The
 - **More items than the maximum** (over 4 metrics or 3 testimonials): the production build fails with a clear message, so nothing is dropped silently.
 - **More than three listed case studies**: the first three in the set order are shown, so the Work list can grow without breaking the build.
 - **No featured work**: the section is hidden and the See my work button is hidden too, so it never points at nothing.
+- **Hidden section with a top bar link**: while Work, Services or About points to a homepage section, its link is hidden whenever that section is hidden.
+- **Missing address**: the visitor sees a styled not-found page with a route home and a Hire me on Upwork button.
 - **Testimonial without approval**: it is not shown. A quote that is approved but has no approved name, role or company shows only the approved parts.
 - **No real photo yet**: the hero and about snippet use generated illustrations, and the page still looks finished.
 - **Longer headline after an edit**: the first-screen check at 375 pixels catches it before merging.
@@ -114,16 +117,16 @@ Ravi may add a source tag to a proposal link, such as `?src=upwork-chatbot`. The
 **Page structure**
 
 - **FR-001**: The homepage MUST show its sections in this order: top bar, hero, proof strip, services, featured work, how I work, tech stack, about snippet, testimonials, FAQ, closing call to action, footer.
-- **FR-002**: The top bar MUST show the name wordmark, links to Work, Services and About, and a Hire me on Upwork button. It MUST stay fixed at the top of the screen while scrolling, and MUST NOT hide keyboard focus or the target of an in-page link.
+- **FR-002**: The top bar MUST show the name wordmark, links to Work, Services and About, and a Hire me on Upwork button. A link to a section that is hidden MUST be hidden too. The top bar MUST stay fixed at the top of the screen while scrolling, and MUST NOT hide keyboard focus or the target of an in-page link.
 - **FR-003**: The hero MUST show the headline "I build AI agents that actually run in production.", a subhead, a See my work button, a Hire me on Upwork button, a photo or generated illustration, and the trust line "Founder, Ango Digital Tech · 5+ years production backend · Healthcare/HL7 experience". On narrow screens the order MUST be: headline, subhead, Hire me on Upwork button, See my work button, trust line, photo. Ango Digital Tech MUST be plain text here.
 - **FR-004**: The See my work button MUST move the visitor to the featured work section.
-- **FR-005**: The proof strip MUST show 3 to 4 metrics, each with a value and a label.
+- **FR-005**: The proof strip MUST show up to 4 metrics, each with a value and a label.
 - **FR-006**: The services section MUST show one card per service, starting with the four named services: AI agents and automation, Backend and APIs, Healthcare integrations (HL7), and Websites and web apps. Each card MUST have an outcome headline, one line, three example deliverables, and a link to its service page once that page exists.
 - **FR-007**: The featured work section MUST show up to 3 case study cards, each with an image, client type, one-line result and stack tags, with AikaIQ first. Each card MUST link to its case study page once that page exists.
 - **FR-008**: The how I work section MUST show four steps: scoping chat on Upwork; fixed milestones; weekly demo and written update; handover with code, docs and a walkthrough video.
 - **FR-009**: The tech stack section MUST show logos grouped into AI, Backend, Cloud and DevOps, and Healthcare. Every logo MUST have a text name.
 - **FR-010**: The about snippet MUST show a photo or generated illustration, three sentences, and a link to the About page once that page exists.
-- **FR-011**: The testimonials section MUST show 2 to 3 client quotes, with name, role and company where approved.
+- **FR-011**: The testimonials section MUST show up to 3 client quotes, with name, role and company where approved.
 - **FR-012**: The FAQ MUST show 5 expandable questions covering fixed price or hourly, code ownership, NDA, communication, and patient data. Each MUST open and close by keyboard as well as by pointer.
 - **FR-013**: The closing section MUST show "Have a process that eats your team's time? Let's automate it." and a Hire me on Upwork button.
 - **FR-014**: The footer MUST show the name, the year, "Founder of Ango Digital Tech" as plain text, and links to Work, Services and About.
@@ -139,29 +142,31 @@ Ravi may add a source tag to a proposal link, such as `?src=upwork-chatbot`. The
 - **FR-018**: The page MUST NOT contain any contact details or contact method. That means any way to reach Ravi outside Upwork, including email, phone, WhatsApp, Telegram, Skype, Discord, Signal, a contact form, a booking link, a QR code, or a link to a social profile that allows direct messages.
 - **FR-019**: The production build MUST fail if a scan of the built page finds an email address, phone number or banned domain.
 - **FR-020**: All text, metrics, testimonials and cards MUST come from editable content, not code.
-- **FR-021**: A section with no content MUST be hidden entirely, including its heading.
+- **FR-021**: A section with no content MUST be hidden entirely, including its heading. See also FR-035.
 - **FR-022**: Every factual claim MUST be true, including the trust line, tech logos and FAQ answers. Metrics, client names and testimonials MUST also be shown only if marked approved.
 - **FR-023**: The production build MUST fail if content contains a placeholder value.
 
-**Mobile, accessibility and analytics**
+**Mobile, accessibility and privacy**
 
 - **FR-024**: The headline and a Hire me on Upwork button MUST be fully visible without scrolling in 375 by 553 pixels of visible space, in portrait at default text size. The subhead and See my work are not part of this rule.
 - **FR-025**: The page MUST conform to WCAG 2.2 AA.
-- **FR-026**: The page MUST render as static content by default, with only the client-side scripting it needs to function.
+- **FR-026**: The page MUST render as static content by default, with client-side scripting limited to what it needs to function and the animation allowed by FR-031 and constitution Principle IV.
 - **FR-027**: A source tag on an incoming link MUST NOT change the page or any Hire me on Upwork URL.
 - **FR-028**: The site MUST NOT set cookies, load third-party scripts or show a cookie banner. It has no analytics in v1.
-- **FR-029**: On narrow screens, Work, Services and About MAY collapse into a menu. The menu MUST be closed by default, have a labelled control, expose its open or closed state to assistive technology, and work by keyboard.
+- **FR-029**: On narrow screens, Work, Services and About MAY collapse into a menu. The menu MUST be closed by default, have a labelled control, expose its open or closed state to assistive technology, and work by keyboard. It MUST close when a link in it is selected. With scripts off, it stays open until the visitor closes it.
 - **FR-030**: Every interactive element MUST be at least 44 by 44 pixels.
-- **FR-031**: The page MUST feel animated and interactive, with these effects: sections fade in once as they enter the screen, over 400 milliseconds with a 16 pixel rise, with items inside them staggered; cards lift on hover and focus; a line under the top bar shows scroll progress; the top bar marks the current section; a line draws along the how I work steps as the visitor scrolls; FAQ answers open smoothly; and the hero illustration draws itself once, in under 4 seconds. The hero headline and Hire me on Upwork buttons MUST NOT animate in. Nothing that moves on its own may run longer than 5 seconds. Content MUST be visible by default, becoming hidden only once scripts are running, so that it stays visible if scripts are off, fail or arrive late, and when printed. All motion MUST stop when the visitor prefers reduced motion. Content reached by link, keyboard or in-page search MUST become visible.
+- **FR-031**: The page MUST feel animated and interactive, with these effects: sections fade in once as they enter the screen, over 400 milliseconds with a 16 pixel rise, with items inside them staggered; cards with a link lift on hover and focus, and cards without one don't; a line under the top bar shows scroll progress; the top bar marks the current section; a line draws along the how I work steps as the visitor scrolls; FAQ answers open smoothly; and the hero illustration draws itself once, in under 4 seconds. The hero headline and Hire me on Upwork buttons MUST NOT animate in. Nothing that moves on its own may run longer than 5 seconds. Content MUST be visible by default, becoming hidden only once scripts are running, so that it stays visible if scripts are off, fail or arrive late, and when printed. All motion MUST stop when the visitor prefers reduced motion. Content reached by link, keyboard or in-page search MUST become visible.
 - **FR-032**: Ravi MUST review every real image and video for contact details and client data before publishing, as a step in the release checks.
 - **FR-033**: Each page MUST state a canonical address with no source tag, so tagged links don't count as duplicate pages.
 - **FR-034**: Every image MUST be generated automatically from content at build time, needing no manual image work. A real photo or logo set in content MUST replace the generated one with no code change. Generated images MUST NOT use the accent colour, and MUST NOT pose as a photo of a real person or a product screenshot.
-- **FR-035**: The published page MUST NOT show empty states, "coming soon" text, TODO text, or links to pages that don't exist. The build MUST fail on a broken internal link.
+- **FR-035**: The published page MUST NOT show empty states, "coming soon" text, TODO text, or links to pages that don't exist. The build MUST fail on a broken internal link. See also FR-021.
 - **FR-036**: The site MUST work at its GitHub Pages address, under the `/portfolio/` path, and at the site root if a custom domain is added later.
+- **FR-037**: A missing address MUST show a not-found page with the top bar, footer, a route to the homepage and a Hire me on Upwork button, with its text from content.
+- **FR-038**: Publishing MUST run every quality gate first, and MUST NOT publish if any fails. A push to `main` alone MUST NOT change the live site.
 
 ### Key Entities
 
-- **Site settings**: the Upwork profile URL, name, tagline and navigation links, held in one site configuration file.
+- **Site config**: the Upwork profile URL, site address, name, tagline and navigation links, held in one file. Editing this file counts as a settings change, not a code change.
 - **Homepage content**: hero text, trust line, how I work steps, about snippet, closing text and section headings.
 - **Metric**: value, label, approval status.
 - **Service**: name, outcome headline, one line, three deliverables, page address, display order. Shared with feature 002.
@@ -199,7 +204,7 @@ Ravi may add a source tag to a proposal link, such as `?src=upwork-chatbot`. The
 - **Generated images**: covers and illustrations are clearly illustrations. The portfolio plan's real photo stays the better option, and takes over as soon as one is added to content.
 - **Analytics**: none in v1, at the project owner's direction, so source tags aren't recorded anywhere. Any analytics added later must be cookieless.
 - **Privacy notice**: none in v1. The site has no forms, cookies, analytics or third-party scripts, and collects no personal data. This is a practical judgement, not legal advice.
-- **Hosting**: GitHub Pages, which can't set custom security headers and has no preview deployments. All gates still run on every pull request.
+- **Hosting**: GitHub Pages, publishing from a `gh-pages` branch rather than GitHub Actions. It can't set custom security headers and has no preview deployments. All gates still run on every pull request and push to `main`.
 - **Initial content**: subhead, service headlines and FAQ topics start from "Ravi Teja — Portfolio Site Plan for Upwork". Tech tiles list only tools named in the project brief and that plan.
 - **Drafted content**: the about sentences, FAQ answers and tech list are drafted from the brief and plan, and state things in Ravi's name, so Ravi reads them before the site goes live. The FAQ answer on patient data MUST NOT claim a certification or compliance status that isn't true.
 - **Content only Ravi can supply**: real metrics, approved testimonials, a real photo and further case studies. Their sections stay hidden until then.

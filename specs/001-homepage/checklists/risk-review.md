@@ -19,13 +19,13 @@
 - [x] CHK004 - Is the hero's arrangement at 375 pixels specified, including where the photo sits relative to the headline and buttons? [Gap, Spec §FR-003, §FR-024]
   - Resolved: FR-003 sets the narrow-screen order. The generated illustration or photo comes last.
 - [x] CHK005 - Are the phone menu's requirements defined, including its open and closed states, how it closes, and how that state is exposed to assistive technology? [Gap, Spec §User Story 2]
-  - Resolved: New FR-029.
+  - Resolved: FR-029 now also covers closing: the menu closes when a link is selected, handled in T023 and tested in T067. An earlier review marked this resolved too soon, before in-page links made it matter.
 - [x] CHK006 - Does the spec state whether the top bar stays fixed on scroll, given the effect on the first screen and on focus being hidden behind it? [Gap, Spec §FR-002]
   - Resolved: FR-002: the top bar stays fixed, and must not hide focus or link targets.
 - [x] CHK007 - Does the spec define whether a privacy notice is needed, given that analytics data goes to a third party even without cookies? [Gap, Constitution VIII, Spec §FR-028]
   - Resolved: Spec Assumptions: no privacy notice in v1. With no analytics or third-party scripts, nothing leaves the visitor's browser. A practical judgement, not legal advice.
 - [x] CHK008 - Are the rules for preview deployments defined, including whether public preview addresses must be kept out of search results and held to the same compliance rules? [Gap, Plan §Summary, Research §R1]
-  - Resolved: GitHub Pages has no preview deployments, so the question no longer applies. All gates still run on every pull request.
+  - Resolved: GitHub Pages has no preview deployments, and publishing is by `pnpm site:deploy`, so the question no longer applies. All gates still run on every pull request and push to `main`.
 
 ## Requirement Clarity
 
@@ -40,14 +40,14 @@
 - [x] CHK013 - Is the required form of an Upwork profile address defined precisely enough to reject a valid Upwork address that isn't Ravi's profile? [Clarity, Data Model §Site config]
   - Resolved: Data model: path must start `/freelancers/~`, and the value is set once, in `site.config.ts`.
 - [x] CHK014 - Are the animation's duration, distance and once-only behaviour specified, or is "may fade in on scroll" the only requirement? [Clarity, Spec §Assumptions, Research §R5]
-  - Resolved: FR-031 lists every effect, with timings and limits.
+  - Resolved: FR-031 lists every effect, with timings and limits, and only cards with a link lift.
 - [x] CHK015 - Is the source tag format defined, including allowed characters, case handling and whether only `src` counts? [Clarity, Spec §FR-027]
   - Resolved: No longer applies. Source tags aren't recorded, and FR-027 only requires that a tag changes nothing.
 
 ## Requirement Consistency
 
 - [x] CHK016 - Does the spec's acceptance scenario that "content which still contains a placeholder" fails the build agree with the plan's scan, which reads only built output and so misses placeholders in content that isn't displayed? [Conflict, Spec §User Story 4, Contracts §build-checks]
-  - Resolved: Loader now checks raw content as well as the scan. See build-checks and T013.
+  - Resolved: Loader now checks raw content as well as the scan. See build-checks and T014.
 - [x] CHK017 - Do the constitution's "production build", the spec's "production build" and the contract's checks on every `pnpm build` describe the same scope for failing builds? [Consistency, Constitution II, Spec §FR-019, §FR-023, Contracts §build-checks]
   - Resolved: build-checks: `pnpm build` is always a production build.
 - [x] CHK018 - Is treating See my work and service links as navigation written into the constitution, given that Principle I says every call to action links to Upwork and the exception exists only in a spec assumption? [Conflict, Constitution I, Spec §Assumptions]
@@ -64,14 +64,14 @@
 - [x] CHK022 - Is the accessibility review in SC-006 defined by who performs it and what it covers, given that automated tools test only part of WCAG? [Measurability, Spec §SC-006, Research §R7]
   - Resolved: SC-006: automated checks plus Ravi's keyboard and screen reader pass.
 - [x] CHK023 - Is a JavaScript size limit stated, or is the score the only limit on future additions? [Gap, Plan §Complexity Tracking, Research §R5]
-  - Resolved: 220 KB compressed limit in build-checks and T035, with T075 setting the order to cut effects.
+  - Resolved: 220 KB compressed limit in build-checks and T037, with T077 setting the order to cut effects.
 
 ## Scenario and Edge Case Coverage
 
 - [x] CHK024 - Do requirements cover scripts that are enabled but fail or arrive late, a case the `noscript` safeguard doesn't reach, which would leave animated sections invisible? [Coverage, Exception Flow, Spec §Edge Cases, Research §R5]
-  - Resolved: FR-031 and T019: visible by default, tested in T070 with scripts blocked.
+  - Resolved: FR-031 and T020: visible by default, tested in T072 with scripts blocked.
 - [x] CHK025 - Are requirements defined for reaching animated content without scrolling through it, such as See my work, keyboard focus, in-page search and printing? [Coverage, Edge Case, Spec §FR-004, Research §R5]
-  - Resolved: FR-031, with T009 and T070 covering print and keyboard.
+  - Resolved: FR-031, with T009 and T072 covering print and keyboard.
 - [x] CHK026 - Does the first-screen rule state what applies at larger text sizes or in landscape on a phone? [Edge Case, Gap, Spec §FR-024]
   - Resolved: Spec Edge Cases: the rule doesn't apply, but nothing may be lost.
 - [x] CHK027 - Are requirements defined for a visitor who moves to a second page, including whether the source tag still applies to that visit? [Coverage, Gap, Spec §FR-027]
@@ -80,9 +80,9 @@
 ## Non-Functional Requirements
 
 - [x] CHK028 - Are score requirements stated for real content, given that the gate runs on fixture content and so doesn't measure Ravi's real images or the analytics script? [Coverage, Spec §SC-005, Research §R7]
-  - Resolved: SC-005 and quickstart manual check 7 require a live audit before launch. No analytics script is left to measure.
+  - Resolved: Tests now run on the real `content/` as well, in T033 and T037, and SC-005 requires a live audit before launch.
 - [x] CHK029 - Is the handling of pages with a source tag defined for search engines, so tagged addresses don't count as duplicate pages? [Gap, Spec §User Story 5]
-  - Resolved: FR-033. `siteUrl` is now set, so it applies from the start.
+  - Resolved: FR-033. Canonicals are set per page in T011, and left out of local test builds because Lighthouse fails a canonical on another domain.
 
 ## Dependencies and Assumptions
 
@@ -92,15 +92,15 @@
 ## Added After the Hosting, Image and Animation Decisions
 
 - [x] CHK031 - Are requirements defined for serving the site under the `/portfolio/` path, including assets that don't get the base path automatically? [Completeness, Spec §FR-036, Research §R1]
-  - Resolved: FR-036, T017 adds the path to images, and T048 tests a build under it.
+  - Resolved: FR-036, T018 adds the path to images, and T050 tests a build under it.
 - [x] CHK032 - Is the loss of security headers and preview deployments on GitHub Pages stated and accepted? [Gap, Spec §Assumptions, Research §R1]
-  - Resolved: Spec Assumptions and research R1. Low practical risk, because the site has no forms, logins or user data.
+  - Resolved: Spec Assumptions and research R1. Low practical risk, because the site has no forms, logins or user data. A direct push to `main` can't publish, because `pnpm site:deploy` runs every gate first.
 - [x] CHK033 - Do image requirements prevent generated images from misleading a client, such as a fake portrait or fake screenshot? [Consistency, Constitution II, Spec §FR-034]
   - Resolved: FR-034 and research R4 rule both out, and a real photo replaces the illustration with no code change.
 - [x] CHK034 - Is "production ready" defined, including what happens to links for pages that don't exist yet? [Clarity, Spec §FR-035, Research §R9]
-  - Resolved: FR-035. Links go to homepage sections until those pages ship, and the scan fails on broken links.
+  - Resolved: FR-035 and FR-037. Links go to homepage sections until those pages ship, a nav link hides with its section, the scan fails on broken links, and a styled not-found page ships with the homepage.
 - [x] CHK035 - Are the richer animation requirements bounded so they can't break the score, accessibility or first paint? [Measurability, Spec §FR-031, Constitution IV]
-  - Resolved: FR-031 and Principle IV set the limits, measured at 206.7 KB against the 220 KB limit, and T075 sets what gets cut first.
+  - Resolved: FR-031 and Principle IV set the limits, measured at 206.7 KB against the 220 KB limit, and T077 sets what gets cut first.
 - [x] CHK036 - Is the loss of source tag recording stated, so nobody expects `?src=` data that doesn't exist? [Consistency, Spec §FR-027, Spec §Assumptions]
   - Resolved: Spec Assumptions and research R2. Analytics is out of scope for v1.
 - [x] CHK037 - Is drafted content that speaks in Ravi's name flagged for Ravi to read before going live? [Assumption, Spec §Assumptions, Plan §Dependencies and Open Items]

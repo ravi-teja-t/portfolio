@@ -16,7 +16,7 @@ This plan also sets up the foundation features 002 to 004 reuse: content loading
 
 **Language/Version**: TypeScript 5 in strict mode, Node.js 26 (current LTS)
 
-**Primary Dependencies**: Next.js 16.4.5 (App Router, latest stable), React 19.3, Tailwind CSS 4, framer-motion 14. New: `yaml`, `zod`. New for development: `prettier`, `sharp`, `@playwright/test`, `@axe-core/playwright`, `@lhci/cli`, `serve`
+**Primary Dependencies**: Next.js 16.4.5 (App Router, latest stable), React 19.3, Tailwind CSS 4, framer-motion 14. New: `yaml`, `zod`. New for development: `prettier`, `sharp`, `gh-pages`, `@playwright/test`, `@axe-core/playwright`, `@lhci/cli`, `serve`
 
 **Package Manager**: pnpm 12
 
@@ -24,7 +24,7 @@ This plan also sets up the foundation features 002 to 004 reuse: content loading
 
 **Testing**: Playwright with axe for browser tests, Node's built-in test runner for build checks, Lighthouse CI for scores
 
-**Target Platform**: Static files on GitHub Pages at `https://ravi-teja-t.github.io/portfolio/`, current browsers on phone and desktop
+**Target Platform**: Static files on GitHub Pages at `https://ravi-teja-t.github.io/portfolio/`, published from a `gh-pages` branch, for current browsers on phone and desktop
 
 **Project Type**: Static website
 
@@ -38,7 +38,7 @@ This plan also sets up the foundation features 002 to 004 reuse: content loading
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-Checked against constitution v1.2.0.
+Checked against constitution v1.3.0.
 
 | Principle | Before research | After design | How the design meets it |
 |---|---|---|---|
@@ -47,10 +47,10 @@ Checked against constitution v1.2.0.
 | III. Content-Driven | Pass | Pass | All page text comes from `content/` and `site.config.ts`. Services and case studies are MDX files. Images generate from content |
 | IV. Performance | Pass | Pass | Static export and generated images. Lighthouse CI enforces 95+ and a 220 KB script limit. Motion meets the animation conditions in Principle IV |
 | V. Mobile and Accessible | Pass | Pass | Viewport tests at 375 by 553, axe on every page, headline and Hire button not animated in, content visible if scripts fail |
-| VI. Design Consistency | Pass | Pass | Tailwind theme tokens. A browser test fails if the accent appears off the Hire button |
+| VI. Design Consistency | Pass | Pass | Tailwind theme tokens, which the image generator reads too. Tests fail if the accent appears off the Hire button or in a generated image |
 | VII. Simplicity | **Fail: repo has SQLite code** | Pass | The plan removes it as its first step |
 | VIII. Privacy | Pass | Pass | No analytics in v1, so no cookies and no third-party scripts |
-| IX. Quality Gates | Pass | Pass | ESLint, Prettier, strict TypeScript, Playwright and axe on every built page, and Lighthouse, run in GitHub Actions |
+| IX. Quality Gates | Pass | Pass | ESLint, Prettier, strict TypeScript, Playwright and axe on every built page including not-found, and Lighthouse. They run in GitHub Actions and again before every publish |
 
 The Principle VII failure is existing code, not a design choice. It stays open until the removal step is done.
 
@@ -83,18 +83,21 @@ content/                       # New: see contracts/content-files.md
 └── testimonials/
 
 public/
-├── .nojekyll                  # New: keeps `_next` from being filtered out
 └── images/generated/          # New, gitignored: output of the image generator
 
 scripts/                       # New
 ├── generate-images.mjs
 ├── check-built-output.mjs
-└── banned-domains.mjs
+├── banned-domains.mjs
+├── image-sizes.mjs            # Image names and sizes, shared with ResponsiveImage
+├── strip-not-found-scripts.mjs
+└── deploy.mjs                 # Runs the gates, then publishes to `gh-pages`
 
 src/
 ├── app/
-│   ├── layout.tsx             # Changed: fonts, metadata, canonical, share image
-│   ├── page.tsx               # Changed: composes the sections
+│   ├── layout.tsx             # Changed: fonts, metadata, share image, top bar, footer
+│   ├── page.tsx               # Changed: composes the sections, sets its canonical
+│   ├── not-found.tsx          # New
 │   └── globals.css            # Changed: design tokens, hover, print and FAQ styles
 ├── components/                # New
 │   ├── HireButton.tsx
@@ -102,15 +105,18 @@ src/
 │   ├── HeroVisual.tsx         # Inline SVG with CSS animation
 │   ├── TopBar.tsx
 │   ├── Footer.tsx
-│   ├── motion/                # The client components
-│   │   ├── Reveal.tsx
-│   │   ├── Stagger.tsx
-│   │   ├── ScrollProgress.tsx
-│   │   ├── ActiveNav.tsx
-│   │   └── TimelineLine.tsx
+│   ├── motion/
+│   │   ├── Reveal.tsx         # Client
+│   │   ├── Stagger.tsx        # Client
+│   │   ├── ActiveNav.tsx      # Client
+│   │   ├── useReveal.ts       # Client
+│   │   ├── loadFeatures.ts    # Loads animation features after hydration
+│   │   ├── ScrollProgress.tsx # CSS-driven
+│   │   └── TimelineLine.tsx   # CSS-driven
 │   └── sections/              # One file per homepage section
 └── lib/
     ├── content/               # New: Zod schemas, loader, approval rules
+    ├── metadata.ts            # New: per-page metadata and canonical
     └── db.ts                  # Removed
 
 src/app/api/health/            # Removed
@@ -118,11 +124,10 @@ src/app/api/health/            # Removed
 tests/                         # New
 ├── e2e/
 ├── checks/
-└── fixtures/                  # Full, empty and invalid content sets
+├── fixtures/                  # Full, empty and invalid content sets
+└── run-lighthouse.mjs         # Audits test and real content
 
-.github/workflows/
-├── quality.yml                # New: gates on pull requests
-└── deploy.yml                 # New: GitHub Pages deploy from main
+.github/workflows/quality.yml  # New: gates on pull requests and pushes to main
 .node-version                  # New
 .prettierrc, .prettierignore   # New
 lighthouserc.json              # New
@@ -143,13 +148,13 @@ README.md                      # Changed: remove SQLite mention
 2. **Foundation**: tokens, fonts, `site.config.ts`, content schemas and loader, image generator, `HireButton`, motion components, top bar, footer.
 3. **Gates**: compliance scan, fixtures, browser tests and Lighthouse, so later work is checked as it lands.
 4. **Sections**: build the 12 sections, using the `ui-ux-pro-max` skill for component-level checks. The portfolio plan's design choices take priority over its suggestions.
-5. **Deployment**: the GitHub Pages workflow and the manual checks.
+5. **Deployment**: `pnpm site:deploy` and the manual checks.
 
 ## Dependencies and Open Items
 
 | Item | Owner | Blocks |
 |---|---|---|
-| Turn on GitHub Pages: Settings, Pages, Source: GitHub Actions | Repo owner | Deployment |
+| After the first publish, set Settings, Pages, Source to Deploy from a branch, `gh-pages`, root folder | Repo owner | The new site appearing |
 | Required status check on `main` in GitHub | Repo owner | Merge blocking |
 | Read the drafted FAQ answers, about text and tech list | Ravi | Going live, because these are claims in Ravi's name |
 | Real photo, metrics, testimonials and more case studies | Ravi | Those parts appearing. The page is complete without them |
@@ -158,4 +163,4 @@ README.md                      # Changed: remove SQLite mention
 
 ## Complexity Tracking
 
-No violations. `framer-motion` adds about 36 KB gzipped for the measured set of effects, which constitution v1.2.0 allows under conditions. If the score falls under 95 or scripts exceed 220 KB, animation has to be reduced.
+No violations. Scripts total 190.0 KB gzipped at page load, with `framer-motion` allowed under conditions by constitution v1.3.0. If the score falls under 95 or scripts exceed 220 KB, animation has to be reduced.

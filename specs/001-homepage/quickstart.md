@@ -44,13 +44,18 @@ pnpm test:lighthouse
 | 15 | No dead ends | `test:checks`, and every build | Broken links fail the scan | FR-035 |
 | 16 | Generated images | `test:e2e` | Every image has loaded, and none uses the accent colour | FR-034 |
 | 17 | Base path | `test:e2e`, with a build using `PAGES_BASE_PATH=/portfolio` | Links, styles and images all resolve | FR-036 |
+| 18 | Real content | `test:e2e` and `test:lighthouse` on the real content build | First screen, axe and scores all pass | SC-001, SC-005 |
+| 19 | Hidden nav links | `test:e2e` with the empty fixture | No nav link to a hidden section | FR-002 |
+| 20 | Not-found page | `test:e2e`, opening a missing address | Styled page with a route home and a Hire button | FR-037 |
+| 21 | Motion effects | `test:e2e` | Each effect is present, and nothing runs longer than 5 seconds | FR-031 |
+| 22 | Deploy stops on failure | Run `pnpm site:deploy` with a failing gate | Nothing is published | FR-038 |
 
 ## Manual checks
 
 Automation can't cover these.
 
 1. **Drafted content.** Read the about sentences, FAQ answers and tech list, because they state things in Ravi's name. Change anything that isn't true.
-2. **Hosted site.** At `https://ravi-teja-t.github.io/portfolio/`, confirm styles and images appear, and a missing address shows the 404 page.
+2. **Hosted site.** After `pnpm site:deploy`, at `https://ravi-teja-t.github.io/portfolio/`, confirm styles and images appear, and a missing address shows the not-found page.
 3. **Keyboard.** Tab through the page and confirm focus is always visible and the FAQ opens with Enter or Space.
 4. **Screen reader.** Read the page once with a screen reader (SC-006).
 5. **Images and video.** Look through each one for contact details or client data, because scans can't read them (FR-032).

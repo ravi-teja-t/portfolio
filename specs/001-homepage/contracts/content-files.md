@@ -16,6 +16,7 @@ content/
 │   ├── about.yaml
 │   ├── faq.yaml
 │   ├── closing.yaml
+│   ├── not-found.yaml     # Text for the not-found page
 │   └── sections.yaml      # Section headings
 ├── services/
 │   └── <slug>.mdx         # One file per service

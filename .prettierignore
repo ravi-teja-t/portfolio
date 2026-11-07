@@ -1,0 +1,13 @@
+out
+.next
+.fixture-out
+.lighthouseci
+playwright-report
+test-results
+specs
+.specify
+.claude
+public/images/generated
+pnpm-lock.yaml
+pnpm-workspace.yaml
+AGENTS.md
