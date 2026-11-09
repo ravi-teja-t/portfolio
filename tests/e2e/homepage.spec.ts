@@ -81,6 +81,6 @@ test("the footer shows the name, year and plain-text founder line", async ({ pag
   await page.goto(FULL);
   const footer = page.locator("#footer");
   await expect(footer).toContainText(String(new Date().getFullYear()));
-  await expect(footer).toContainText("Founder of Ango Digital Tech");
+  await expect(footer).toContainText("Founder of Angodigital Technologies");
   await expect(footer.getByRole("link", { name: /Ango/ })).toHaveCount(0);
 });
