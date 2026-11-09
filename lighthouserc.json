@@ -1,7 +1,7 @@
 {
   "ci": {
     "collect": {
-      "numberOfRuns": 3,
+      "numberOfRuns": 5,
       "url": ["http://localhost/", "http://localhost/404.html"],
       "settings": {
         "chromeFlags": "--headless=new --no-sandbox --force-prefers-no-reduced-motion"
