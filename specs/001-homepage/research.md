@@ -8,21 +8,21 @@ Findings marked **Tested** were confirmed with a throwaway build of this repo's 
 
 ## R1. Rendering and hosting
 
-**Decision**: Use `output: "export"` with `trailingSlash: true`, and publish `out/` to a `gh-pages` branch, which GitHub Pages serves using its Deploy from a branch setting. GitHub Actions doesn't deploy, at the project owner's direction. Turn off `cacheComponents` and `partialPrefetching`. The site address is `https://ravi-teja-t.github.io/portfolio/`.
+**Decision**: Use `output: "export"` with `trailingSlash: true`, and publish `out/` to GitHub Pages from GitHub Actions on every push to `main`, at the project owner's direction. This replaced an earlier manual publish to a `gh-pages` branch. Turn off `cacheComponents` and `partialPrefetching`. The site address is `https://ravi-teja-t.github.io/portfolio/`.
 
 **Rationale**:
 
 - The project owner chose GitHub Pages. The repo is already public, which Pages needs on a free plan.
 - **Tested**: the address already returns a page: the repo's old README, rendered by Jekyll. Its text matches `dev-branch`, so that's probably the current source, but the setting isn't readable without logging in.
-- **Docs**: a branch can publish only from its root or `/docs`, so built files need their own branch. A dedicated `gh-pages` branch keeps build output out of `main` and leaves `dev-branch` untouched.
+- **Docs**: with Source set to GitHub Actions, Pages serves an uploaded artifact, so build output never lands in a branch and Jekyll never runs on it.
 - Next.js 16.4.5, already installed, is the latest stable version.
 - **Tested**: with `cacheComponents` on, the build failed: `Route segment config "dynamic" is not compatible with nextConfig.cacheComponents`. A static export needs `dynamic = "force-static"` on routes such as `sitemap.ts`, so the two settings conflict.
 - **Tested**: with `PAGES_BASE_PATH=/portfolio`, every link, script and style came out under `/portfolio/`, and `/backend` became `backend/index.html`.
 - `trailingSlash` matters here. Without it the export writes both `backend.html` and a `backend/` folder, and a static host can treat that address as a folder with no index page.
 
-**Publishing**: `pnpm site:deploy` runs every gate on Ravi's machine, builds, then publishes with the `gh-pages` package. If any gate fails, nothing is published, so a direct push to `main` can't change the live site. `--nojekyll` is required, because Jekyll would otherwise remove the `_next` folder.
+**Publishing**: `.github/workflows/quality.yml` runs every gate on a push to `main`, then builds and deploys with `actions/upload-pages-artifact` and `actions/deploy-pages`. If any gate fails, nothing is published.
 
-**Base path**: a project site lives under `/portfolio/`, so `next.config.ts` reads `basePath` from `PAGES_BASE_PATH`. `scripts/deploy.mjs` sets it to `/portfolio`. Local builds and tests leave it empty. If a custom domain is added later, remove it from that script.
+**Base path**: a project site lives under `/portfolio/`, so `next.config.ts` reads `basePath` from `PAGES_BASE_PATH`. The deploy workflow sets it from `actions/configure-pages`, which gives `/portfolio` now and an empty path if a custom domain is added later. Local builds and tests leave it empty.
 
 **Docs**: `next/link` applies `basePath` automatically, but images don't. `ResponsiveImage` and any other asset path must add it by hand.
 

@@ -204,7 +204,7 @@ Ravi may add a source tag to a proposal link, such as `?src=upwork-chatbot`. The
 - **Generated images**: covers and illustrations are clearly illustrations. The portfolio plan's real photo stays the better option, and takes over as soon as one is added to content.
 - **Analytics**: none in v1, at the project owner's direction, so source tags aren't recorded anywhere. Any analytics added later must be cookieless.
 - **Privacy notice**: none in v1. The site has no forms, cookies, analytics or third-party scripts, and collects no personal data. This is a practical judgement, not legal advice.
-- **Hosting**: GitHub Pages, publishing from a `gh-pages` branch rather than GitHub Actions. It can't set custom security headers and has no preview deployments. All gates still run on every pull request and push to `main`.
+- **Hosting**: GitHub Pages, deployed by GitHub Actions on every push to `main` after all gates pass. It can't set custom security headers and has no preview deployments. All gates still run on every pull request and push to `main`.
 - **Initial content**: subhead, service headlines and FAQ topics start from "Ravi Teja — Portfolio Site Plan for Upwork". Tech tiles list only tools named in the project brief and that plan.
 - **Drafted content**: the about sentences, FAQ answers and tech list are drafted from the brief and plan, and state things in Ravi's name, so Ravi reads them before the site goes live. The FAQ answer on patient data MUST NOT claim a certification or compliance status that isn't true.
 - **Content only Ravi can supply**: real metrics, approved testimonials, a real photo and further case studies. Their sections stay hidden until then.

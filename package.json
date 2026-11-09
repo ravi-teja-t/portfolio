@@ -12,8 +12,7 @@
     "test:checks": "node --test --test-concurrency=1 tests/checks/",
     "test:e2e": "node tests/build-fixtures.mjs && playwright test",
     "test:lighthouse": "node tests/run-lighthouse.mjs",
-    "images": "node scripts/generate-images.mjs",
-    "site:deploy": "node scripts/deploy.mjs"
+    "images": "node scripts/generate-images.mjs"
   },
   "dependencies": {
     "framer-motion": "^14.9.1",
@@ -33,7 +32,6 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",
-    "gh-pages": "^6.3.0",
     "prettier": "^3.9.10",
     "serve": "^14.2.6",
     "sharp": "^0.35.5",
