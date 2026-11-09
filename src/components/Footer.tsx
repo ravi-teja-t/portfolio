@@ -33,6 +33,7 @@ export function Footer() {
       </div>
       <p
         aria-hidden
+        data-decorative
         className="type-display text-center text-wordmark whitespace-nowrap text-ink-line select-none"
       >
         {site.name}
