@@ -7,22 +7,18 @@ import { getHome } from "@/lib/content/select";
 export function AboutSnippet() {
   const { about, visible } = getHome();
   if (!visible.about || !about) return null;
+  const [lead, ...rest] = about.sentences;
   return (
     <Reveal>
       <section
         id="about"
-        className="mx-auto grid max-w-content items-center gap-3 px-2 py-6 md:grid-cols-[16rem_1fr] md:gap-6 md:px-3 md:py-10"
+        className="mx-auto grid max-w-content gap-4 px-2 py-8 md:grid-cols-12 md:gap-4 md:px-3 md:py-14"
       >
-        <ResponsiveImage
-          generated={{ kind: "about", name: "about" }}
-          image={about.photo}
-          sizes="(min-width: 768px) 256px, 160px"
-          className="h-auto w-20 rounded-lg md:w-full"
-        />
-        <div>
+        <div className="md:col-span-7">
           <SectionHeading section="about" />
+          <p className="type-display mt-3 text-3xl md:mt-5">{lead}</p>
           <div className="mt-2 flex max-w-text flex-col gap-1 text-lg text-muted">
-            {about.sentences.map((sentence) => (
+            {rest.map((sentence) => (
               <p key={sentence}>{sentence}</p>
             ))}
           </div>
@@ -35,6 +31,14 @@ export function AboutSnippet() {
               {about.linkLabel}
             </Link>
           )}
+        </div>
+        <div className="plate-reveal overflow-clip md:col-span-4 md:col-start-9 md:self-end">
+          <ResponsiveImage
+            generated={{ kind: "about", name: "about" }}
+            image={about.photo}
+            sizes="(min-width: 768px) 33vw, 100vw"
+            className="h-auto w-full"
+          />
         </div>
       </section>
     </Reveal>

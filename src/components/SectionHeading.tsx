@@ -3,5 +3,9 @@ import type { Sections } from "@/lib/content/schemas";
 
 export function SectionHeading({ section }: { section: keyof Sections }) {
   const { sections } = loadContent();
-  return <h2 className="text-2xl font-bold tracking-tight md:text-3xl">{sections[section]}</h2>;
+  return (
+    <div className="section-head">
+      <h2 className="section-title type-display text-heading">{sections[section]}</h2>
+    </div>
+  );
 }

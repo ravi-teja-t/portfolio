@@ -8,14 +8,14 @@ export function Proof() {
   if (!visible.proof) return null;
   return (
     <Reveal>
-      <section id="proof" className="bg-surface">
-        <div className="mx-auto max-w-content px-2 py-6 md:px-3 md:py-8">
+      <section id="proof" className="bg-ink text-on-ink">
+        <div className="mx-auto max-w-content px-2 py-6 md:px-3 md:py-10">
           <SectionHeading section="proof" />
-          <Stagger className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <Stagger className="mt-4 grid grid-cols-2 gap-3 md:mt-6 md:grid-cols-4">
             {metrics.map((metric) => (
-              <div key={metric.label}>
-                <p className="text-3xl font-bold tracking-tight">{metric.value}</p>
-                <p className="mt-0.5 text-sm text-muted">{metric.label}</p>
+              <div key={metric.label} className="border-t border-ink-line pt-1.5">
+                <p className="type-display text-heading">{metric.value}</p>
+                <p className="mt-1 text-sm text-on-ink-muted">{metric.label}</p>
               </div>
             ))}
           </Stagger>

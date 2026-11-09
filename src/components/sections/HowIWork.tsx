@@ -10,19 +10,21 @@ export function HowIWork() {
     <Reveal>
       <section
         id="how-i-work"
-        className="mx-auto grid max-w-content gap-3 px-2 py-6 md:grid-cols-[0.8fr_1.2fr] md:gap-8 md:px-3 md:py-10"
+        className="mx-auto grid max-w-content gap-4 px-2 py-8 md:grid-cols-2 md:gap-8 md:px-3 md:py-14"
       >
-        <SectionHeading section="howIWork" />
+        <div className="md:sticky md:top-12 md:self-start">
+          <SectionHeading section="howIWork" />
+        </div>
         <TimelineLine>
-          <ol className="flex flex-col gap-3">
+          <ol className="flex flex-col gap-5 md:gap-8">
             {howIWork.map((step, index) => (
-              <li key={step.title} className="relative flex gap-2">
-                <span className="relative z-10 flex size-5.5 shrink-0 items-center justify-center rounded-full border border-border bg-bg font-mono text-sm font-medium">
-                  {index + 1}
+              <li key={step.title} className="relative flex gap-2 md:gap-3">
+                <span className="relative z-10 flex size-5.5 shrink-0 items-center justify-center border border-text bg-bg font-mono text-sm font-medium">
+                  {String(index + 1).padStart(2, "0")}
                 </span>
-                <div className="pt-0.5">
-                  <h3 className="text-lg font-bold tracking-tight">{step.title}</h3>
-                  <p className="mt-0.5 text-muted">{step.text}</p>
+                <div>
+                  <h3 className="type-display text-2xl">{step.title}</h3>
+                  <p className="mt-1 text-lg text-muted">{step.text}</p>
                 </div>
               </li>
             ))}

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { FULL, REAL, pages } from "./helpers/pages";
 
-const ACCENTS = ["rgb(29, 78, 216)", "rgb(26, 67, 184)"];
+const ACCENTS = ["rgb(255, 79, 0)", "rgb(230, 70, 0)"];
 
 for (const [name, origin] of [
   ["test content", FULL],

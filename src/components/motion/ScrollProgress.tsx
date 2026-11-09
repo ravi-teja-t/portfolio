@@ -5,7 +5,7 @@ export function ScrollProgress() {
     <div
       data-scroll-progress
       aria-hidden
-      className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-text"
+      className="absolute inset-x-0 -bottom-px h-px origin-left bg-on-ink"
     />
   );
 }
