@@ -140,7 +140,7 @@ The hero illustration is a build-time inline SVG component, not an image file, s
 - Set `--spacing` to `0.5rem`, so spacing utilities step in 8 px.
 - Accent: deep blue `#1D4ED8`, used only by `HireButton`. White on it has a contrast ratio of 6.70:1, calculated, which passes AA.
 - Focus rings, the scroll progress line and the active nav marker use near-black, so the accent stays exclusive.
-- Fonts: Inter and JetBrains Mono through `next/font/google`. **Docs** fonts are served from the site's own domain, with no requests to Google at page load. The build itself does need network access. JetBrains Mono uses `preload: false`, because the homepage shows no code.
+- Fonts: Bricolage Grotesque, IBM Plex Sans and JetBrains Mono through `next/font/google`. **Docs** fonts are served from the site's own domain, with no requests to Google at page load. The build itself does need network access. JetBrains Mono uses `preload: false`, because the homepage shows no code.
 
 **Enforcement**: a browser test reads computed colours on every element and fails if the accent appears outside `[data-hire]`.
 

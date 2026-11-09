@@ -23,7 +23,7 @@ function readTokens() {
 }
 
 const color = readTokens();
-const FONT = "Inter, Segoe UI, Helvetica, Arial, sans-serif";
+const FONT = "IBM Plex Sans, Segoe UI, Helvetica, Arial, sans-serif";
 
 function escapeXml(value) {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -54,24 +54,69 @@ function seededRandom(seed) {
   };
 }
 
-// An abstract graph of connected nodes, unique to each seed.
-function graph(seed, x, y, width, height) {
+// Tangled lines on the left pass through a gate and leave in order on the right: the idea behind
+// the hero schematic, drawn differently for each seed.
+function flow(seed, x, y, width, height, count = 64) {
   const random = seededRandom(seed);
-  const columns = 5;
-  const nodes = Array.from({ length: columns * 2 }, (_, index) => ({
-    x: x + (width / (columns - 1)) * (index % columns),
-    y: y + height * (index < columns ? 0.15 + random() * 0.3 : 0.55 + random() * 0.35),
-    size: 7 + random() * 9,
-  }));
-  const lines = nodes.flatMap((node, index) => {
-    const next = nodes[(index + 1 + Math.floor(random() * 3)) % nodes.length];
-    return `<path d="M${node.x} ${node.y} C${(node.x + next.x) / 2} ${node.y} ${(node.x + next.x) / 2} ${next.y} ${next.x} ${next.y}" stroke="${color["ink-line"]}" stroke-width="2" fill="none"/>`;
+  const gateX = x + width * (0.42 + random() * 0.14);
+  const gateWidth = width * 0.12;
+  const gateTop = y + height * 0.34;
+  const gateHeight = height * 0.32;
+  const exit = gateX + gateWidth;
+  const reach = x + width - exit;
+  const lines = Array.from({ length: count }, (_, index) => {
+    const start = y + random() * height;
+    const swing = y + random() * height;
+    const gate = gateTop + (gateHeight * index) / (count - 1);
+    const end = y + (height * (index + 0.5)) / count;
+    const d = [
+      `M${x} ${start}`,
+      `C${x + (gateX - x) * 0.45} ${swing} ${x + (gateX - x) * 0.6} ${gate} ${gateX} ${gate}`,
+      `H${exit}`,
+      `C${exit + reach * 0.4} ${gate} ${exit + reach * 0.5} ${end} ${x + width} ${end}`,
+    ].join(" ");
+    return `<path d="${d}" stroke="${color["on-ink"]}" stroke-opacity="0.42" stroke-width="1.25" fill="none"/>`;
   });
-  const dots = nodes.map(
-    (node) =>
-      `<circle cx="${node.x}" cy="${node.y}" r="${node.size}" fill="${color.ink}" stroke="${color["on-ink"]}" stroke-width="2"/>`,
-  );
-  return [...lines, ...dots].join("");
+  const gate = `<rect x="${gateX}" y="${gateTop - 14}" width="${gateWidth}" height="${gateHeight + 28}" fill="${color.ink}" stroke="${color["on-ink"]}" stroke-width="2"/>`;
+  return [...lines, gate].join("");
+}
+
+// Contour lines around a point, like a survey plate. It stands in for a portrait without
+// drawing one.
+function contours(seed, size) {
+  const random = seededRandom(seed);
+  const waves = Array.from({ length: 4 }, (_, index) => ({
+    frequency: index + 2,
+    phase: random() * Math.PI * 2,
+    depth: 0.05 + random() * 0.07,
+  }));
+  const center = size / 2;
+  const rings = Array.from({ length: 30 }, (_, ring) => {
+    const radius = size * 0.03 + ring * size * 0.0215;
+    const points = Array.from({ length: 120 }, (_, step) => {
+      const angle = (step / 120) * Math.PI * 2;
+      const wobble = waves.reduce(
+        (sum, wave) =>
+          sum + Math.sin(angle * wave.frequency + wave.phase + ring * 0.09) * wave.depth,
+        1,
+      );
+      const px = center + Math.cos(angle) * radius * wobble;
+      const py = center + Math.sin(angle) * radius * wobble;
+      return `${px.toFixed(1)} ${py.toFixed(1)}`;
+    });
+    const opacity = (0.75 - ring * 0.018).toFixed(2);
+    return `<path d="M${points.join(" L")} Z" stroke="${color["on-ink"]}" stroke-opacity="${opacity}" stroke-width="1.25" fill="none"/>`;
+  });
+  return rings.join("");
+}
+
+function gridLines(width, height, step) {
+  const columns = Array.from({ length: Math.ceil(width / step) }, (_, index) => index * step);
+  const rows = Array.from({ length: Math.ceil(height / step) }, (_, index) => index * step);
+  return [
+    ...columns.map((x) => `<path d="M${x} 0 V${height}" stroke="${color["ink-line"]}"/>`),
+    ...rows.map((y) => `<path d="M0 ${y} H${width}" stroke="${color["ink-line"]}"/>`),
+  ].join("");
 }
 
 function textLines(lines, x, y, size, fill, weight = 700) {
@@ -86,53 +131,55 @@ function textLines(lines, x, y, size, fill, weight = 700) {
 function coverSvg(study) {
   const width = COVER.widths.at(-1);
   const height = Math.round(width * COVER.ratio);
-  const title = wrap(study.title, 34).slice(0, 2);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
     <rect width="${width}" height="${height}" fill="${color.ink}"/>
-    ${graph(study.slug, 90, 40, width - 180, 340)}
-    ${textLines(title, 80, 500, 54, color["on-ink"])}
-    ${textLines([study.stack.join("  ·  ")], 80, 650, 28, color["ink-line"], 500)}
+    ${gridLines(width, height, 80)}
+    ${flow(study.slug, 0, 40, width, height - 80, 72)}
   </svg>`;
-}
-
-function initials(name) {
-  return name
-    .split(/[\s/-]+/)
-    .filter(Boolean)
-    .map((word) => word[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
 }
 
 function aboutSvg(name) {
   const size = ABOUT.widths.at(-1);
-  const rings = [290, 230, 170]
-    .map(
-      (radius) =>
-        `<circle cx="${size / 2}" cy="${size / 2}" r="${radius}" fill="none" stroke="${color["ink-line"]}" stroke-width="2"/>`,
-    )
-    .join("");
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
     <rect width="${size}" height="${size}" fill="${color.ink}"/>
-    ${rings}
-    <text x="50%" y="50%" dy="0.35em" text-anchor="middle" font-family="${FONT}" font-size="150" font-weight="700" fill="${color["on-ink"]}">${escapeXml(initials(name))}</text>
+    ${gridLines(size, size, 80)}
+    ${contours(name, size)}
   </svg>`;
 }
 
+// A small mirrored pixel mark, different for each tool.
 function tileSvg(name) {
+  const random = seededRandom(name);
+  const cell = 16;
+  const square = (column, row) =>
+    `<rect x="${8 + column * cell}" y="${8 + row * cell}" width="${cell}" height="${cell}"/>`;
+  const cells = Array.from({ length: 5 }, (_, row) =>
+    Array.from({ length: 3 }, (_, column) => {
+      if (random() < 0.45) return "";
+      return column < 2 ? square(column, row) + square(4 - column, row) : square(column, row);
+    }).join(""),
+  ).join("");
   return `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">
-    <rect width="96" height="96" rx="16" fill="${color.ink}"/>
-    <text x="50%" y="50%" dy="0.35em" text-anchor="middle" font-family="${FONT}" font-size="34" font-weight="700" fill="${color["on-ink"]}">${escapeXml(initials(name))}</text>
+    <g fill="${color["on-ink"]}">${cells}</g>
+  </svg>`;
+}
+
+// Matches the mark in the top bar.
+function iconSvg() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">
+    <rect width="96" height="96" fill="${color.ink}"/>
+    <rect x="18" y="18" width="60" height="60" fill="none" stroke="${color["on-ink"]}" stroke-width="7"/>
+    <rect x="46" y="46" width="32" height="32" fill="${color["on-ink"]}"/>
   </svg>`;
 }
 
 function shareSvg(name, headline) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
     <rect width="1200" height="630" fill="${color.ink}"/>
-    ${graph(name, 760, 60, 370, 510)}
-    ${textLines([name], 72, 110, 34, color["ink-line"], 600)}
-    ${textLines(wrap(headline, 24), 72, 230, 62, color["on-ink"])}
+    ${gridLines(1200, 630, 70)}
+    ${flow(name, 640, 40, 560, 550, 48)}
+    ${textLines([name], 72, 110, 32, color["on-ink-muted"], 600)}
+    ${textLines(wrap(headline, 20), 72, 230, 66, color["on-ink"])}
   </svg>`;
 }
 
@@ -181,7 +228,7 @@ await Promise.all(
 );
 
 await writeRaster(aboutSvg(siteConfig.name), "about", ABOUT.widths);
-fs.writeFileSync(path.join(outputDir, "icon.svg"), tileSvg(siteConfig.name));
+fs.writeFileSync(path.join(outputDir, "icon.svg"), iconSvg());
 
 const techItems = (readYaml("home/tech-stack.yaml") ?? []).flatMap((group) => group.items ?? []);
 for (const item of techItems) {

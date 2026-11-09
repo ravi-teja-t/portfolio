@@ -1,41 +1,53 @@
 import { HeroVisual } from "@/components/HeroVisual";
 import { HireButton } from "@/components/HireButton";
+import { HeroField } from "@/components/motion/HeroField";
 import { ResponsiveImage } from "@/components/ResponsiveImage";
 import { getHome } from "@/lib/content/select";
 
 // Never wrapped in Reveal: the headline and Hire button must paint immediately.
 export function Hero() {
-  const { hero, visible } = getHome();
+  const { hero, site, visible } = getHome();
+  const trust = hero.trustLine.split(" · ");
   return (
-    <section id="hero" className="mx-auto max-w-content px-2 pt-3 pb-6 md:px-3 md:pt-10 md:pb-12">
-      <div className="grid items-center gap-5 md:grid-cols-[1.15fr_0.85fr] md:gap-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight md:text-4xl">{hero.headline}</h1>
-          <p className="mt-2 max-w-text text-base text-muted md:mt-3 md:text-lg">{hero.subhead}</p>
-          <div className="mt-3 flex flex-col gap-1 sm:flex-row md:mt-4">
+    <section id="hero" className="relative overflow-clip bg-ink text-on-ink">
+      <HeroField />
+      <div className="relative mx-auto max-w-content px-2 pt-2 md:px-3 md:pt-6">
+        <p className="mb-2 hidden font-mono text-xs text-on-ink-muted sm:block">{site.tagline}</p>
+        <h1 className="type-display max-w-headline text-display">{hero.headline}</h1>
+        <div className="mt-2 grid items-end gap-2 md:mt-4 md:grid-cols-2 md:gap-4">
+          <p className="max-w-text text-base text-on-ink-muted md:text-lg">{hero.subhead}</p>
+          <div className="flex flex-wrap gap-1 md:justify-end">
             <HireButton />
             {visible.work && (
-              <a
-                href="#work"
-                className="inline-flex min-h-(--size-target) items-center justify-center rounded-sm border border-border px-2 font-semibold transition-colors duration-200 hover:bg-surface"
-              >
+              <a href="#work" className="btn-ghost">
                 {hero.seeWorkLabel}
               </a>
             )}
           </div>
-          <p className="mt-3 text-xs text-muted">{hero.trustLine}</p>
         </div>
-        {hero.photo ? (
-          <ResponsiveImage
-            generated={{ kind: "about", name: "about" }}
-            image={hero.photo}
-            sizes="(min-width: 768px) 40vw, 100vw"
-            className="h-auto w-full rounded-lg"
-          />
-        ) : (
-          <HeroVisual />
-        )}
+
+        <div className="hero-plate mt-5 md:mt-8">
+          {hero.photo ? (
+            <ResponsiveImage
+              generated={{ kind: "about", name: "about" }}
+              image={hero.photo}
+              sizes="100vw"
+              className="h-auto w-full"
+            />
+          ) : (
+            <HeroVisual />
+          )}
+        </div>
+
+        <ul className="mt-5 grid border-t border-ink-line font-mono text-xs text-on-ink-muted sm:grid-cols-3 md:mt-8">
+          {trust.map((item) => (
+            <li key={item} className="border-b border-ink-line py-1.5 sm:border-b-0">
+              {item}
+            </li>
+          ))}
+        </ul>
       </div>
+      <div aria-hidden className="ruler text-ink-line" />
     </section>
   );
 }

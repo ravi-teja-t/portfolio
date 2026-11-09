@@ -5,6 +5,7 @@ import { getHome } from "@/lib/content/select";
 import { GENERATED_PATH, tileName } from "../../../scripts/image-sizes.mjs";
 
 const basePath = process.env.PAGES_BASE_PATH ?? "";
+const TICKER_REPEATS = 4;
 
 function tileSrc(item: { name: string; logo?: string }) {
   return item.logo
@@ -12,42 +13,65 @@ function tileSrc(item: { name: string; logo?: string }) {
     : `${basePath}${GENERATED_PATH}/${tileName(item.name)}.svg`;
 }
 
+// Moves only with the scroll position, so it never runs on its own. The list below carries the
+// same names for assistive technology.
+function Ticker({ names, className }: { names: string[]; className: string }) {
+  const line = Array.from({ length: TICKER_REPEATS }, () => names).flat();
+  return (
+    <div className={`ticker-row ${className}`}>
+      {line.map((name, index) => (
+        <span key={`${name}-${index}`} className="px-2">
+          {name}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export function TechStack() {
   const { techStack, visible } = getHome();
   if (!visible["tech-stack"]) return null;
+  const names = techStack.flatMap((group) => group.items.map((item) => item.name));
+  const half = Math.ceil(names.length / 2);
   return (
     <Reveal>
-      <section id="tech-stack" className="bg-surface">
-        <div className="mx-auto max-w-content px-2 py-6 md:px-3 md:py-10">
+      <section id="tech-stack" className="overflow-clip bg-ink text-on-ink">
+        <div className="mx-auto max-w-content px-2 pt-8 md:px-3 md:pt-14">
           <SectionHeading section="techStack" />
-          <div className="mt-3 grid gap-3 md:mt-4 md:grid-cols-2">
-            {techStack.map((group) => (
-              <div key={group.group}>
-                <h3 className="font-mono text-xs text-muted">{group.group}</h3>
-                <Stagger className="mt-1 flex flex-wrap gap-1">
-                  {group.items.map((item) => (
-                    <div
-                      key={item.name}
-                      className="flex items-center gap-1 rounded-sm border border-border bg-bg py-0.5 pr-1.5 pl-0.5 text-sm font-medium"
-                    >
-                      {/* next/image can't optimise in a static export, and tiles are small SVGs */}
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={tileSrc(item)}
-                        alt=""
-                        width={32}
-                        height={32}
-                        loading="lazy"
-                        decoding="async"
-                        className="rounded-sm"
-                      />
-                      {item.name}
-                    </div>
-                  ))}
-                </Stagger>
-              </div>
-            ))}
-          </div>
+        </div>
+        <div
+          aria-hidden
+          className="type-display mt-4 flex flex-col gap-1 text-heading text-ink-line select-none md:mt-6"
+        >
+          <Ticker names={names.slice(0, half)} className="ticker-left" />
+          <Ticker names={names.slice(half)} className="ticker-right" />
+        </div>
+        <div className="mx-auto grid max-w-content gap-4 px-2 py-6 sm:grid-cols-2 md:px-3 md:py-10 lg:grid-cols-4">
+          {techStack.map((group) => (
+            <div key={group.group}>
+              <h3 className="border-b border-on-ink pb-1 font-mono text-xs">{group.group}</h3>
+              <Stagger>
+                {group.items.map((item) => (
+                  <div
+                    key={item.name}
+                    className="flex items-center gap-1.5 border-b border-ink-line py-1 text-sm font-medium"
+                  >
+                    {/* next/image can't optimise in a static export, and tiles are small SVGs */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={tileSrc(item)}
+                      alt=""
+                      width={20}
+                      height={20}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    {item.name}
+                  </div>
+                ))}
+              </Stagger>
+            </div>
+          ))}
         </div>
       </section>
     </Reveal>

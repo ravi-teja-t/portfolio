@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 import { Footer } from "@/components/Footer";
 import { TopBar } from "@/components/TopBar";
 import { loadContent } from "@/lib/content/load";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-bricolage",
+  display: "swap",
+  axes: ["opsz", "wdth"],
+});
+const plex = IBM_Plex_Sans({ subsets: ["latin"], variable: "--font-plex", display: "swap" });
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
@@ -33,12 +39,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${bricolage.variable} ${plex.variable} ${jetbrainsMono.variable}`}
     >
       <body>
         <a
           href="#main"
-          className="absolute top-1 left-1 z-30 inline-flex min-h-(--size-target) -translate-y-20 items-center rounded-sm bg-bg px-2 font-semibold focus:translate-y-0"
+          className="absolute top-1 left-1 z-30 inline-flex min-h-(--size-target) -translate-y-20 items-center bg-bg px-2 font-semibold text-text focus:translate-y-0"
         >
           {site.skipLabel}
         </a>

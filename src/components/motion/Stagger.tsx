@@ -5,7 +5,7 @@ import { Children, type ReactNode } from "react";
 import { loadFeatures } from "./loadFeatures";
 import { useReveal } from "./useReveal";
 
-const STEP_SECONDS = 0.06;
+const STEP_SECONDS = 0.08;
 
 export function Stagger({ children, className }: { children: ReactNode; className?: string }) {
   const { ref, hidden } = useReveal();
@@ -17,11 +17,11 @@ export function Stagger({ children, className }: { children: ReactNode; classNam
             key={index}
             data-reveal
             initial={false}
-            animate={hidden ? { opacity: 0, y: 16 } : { opacity: 1, y: 0 }}
+            animate={hidden ? { opacity: 0, y: 28 } : { opacity: 1, y: 0 }}
             transition={
               hidden
                 ? { duration: 0 }
-                : { duration: 0.4, ease: "easeOut", delay: index * STEP_SECONDS }
+                : { duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: index * STEP_SECONDS }
             }
           >
             {child}
