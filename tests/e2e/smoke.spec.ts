@@ -4,10 +4,11 @@ import { BASE, FULL, REAL, pages } from "./helpers/pages";
 const MISSING = "/this-page-does-not-exist/";
 
 async function allImagesLoaded(page: Page) {
-  // Lazy images load only near the viewport, so scroll through the page first.
+  // Lazy images load only near the viewport, so scroll through the page first. Scroll instantly:
+  // the site sets smooth scrolling, and each smooth scroll would cut off the one before it.
   await page.evaluate(async () => {
     for (let y = 0; y < document.body.scrollHeight; y += 400) {
-      window.scrollTo(0, y);
+      window.scrollTo({ top: y, behavior: "instant" });
       await new Promise((resolve) => setTimeout(resolve, 30));
     }
   });

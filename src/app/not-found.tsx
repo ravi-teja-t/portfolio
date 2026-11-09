@@ -7,7 +7,11 @@ export default function NotFound() {
   return (
     <section className="overflow-clip bg-ink text-on-ink">
       <div className="mx-auto max-w-content px-2 py-8 md:px-3 md:py-14">
-        <p aria-hidden className="type-display text-wordmark text-ink-line select-none">
+        <p
+          aria-hidden
+          data-decorative
+          className="type-display text-wordmark text-ink-line select-none"
+        >
           404
         </p>
         <h1 className="type-display mt-4 text-heading">{notFound.heading}</h1>

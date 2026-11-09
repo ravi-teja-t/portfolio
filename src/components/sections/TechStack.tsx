@@ -41,6 +41,7 @@ export function TechStack() {
         </div>
         <div
           aria-hidden
+          data-decorative
           className="type-display mt-4 flex flex-col gap-1 text-heading text-ink-line select-none md:mt-6"
         >
           <Ticker names={names.slice(0, half)} className="ticker-left" />
