@@ -21,12 +21,20 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const { site, hero } = loadContent();
+// Favicons are cropped from Ravi's photo by scripts/generate-images.mjs.
+const GENERATED = `${process.env.PAGES_BASE_PATH ?? ""}/images/generated`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(`${site.siteUrl}/`),
   title: `${site.name} · ${hero.headline}`,
   description: site.tagline,
-  icons: { icon: `${process.env.PAGES_BASE_PATH ?? ""}/images/generated/icon.svg` },
+  icons: {
+    icon: [
+      { url: `${GENERATED}/icon-32.png`, sizes: "32x32", type: "image/png" },
+      { url: `${GENERATED}/icon-192.png`, sizes: "192x192", type: "image/png" },
+    ],
+    apple: { url: `${GENERATED}/apple-touch-icon.png`, sizes: "180x180" },
+  },
   openGraph: {
     title: site.name,
     description: hero.headline,

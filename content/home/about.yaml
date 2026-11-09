@@ -1,4 +1,9 @@
 sentences:
-  - I'm Ravi Teja, a backend engineer with 5+ years in Java, Spring Boot, microservices and AWS.
+  - I'm Ravi Teja, a backend engineer with 4+ years in Java, Spring Boot, microservices and AWS.
   - I build production-grade AI automation, including AikaIQ, an agentic AI framework and automation API for support and operations.
-  - I founded Ango Digital Tech.
+  - I founded Angodigital Technologies.
+photo:
+  src: generated/portrait
+  alt: Ravi Teja in a navy suit jacket and white shirt
+  width: 640
+  height: 640

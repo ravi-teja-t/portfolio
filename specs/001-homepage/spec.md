@@ -6,7 +6,7 @@
 
 **Status**: Draft
 
-**Input**: User description: "Build the homepage of Ravi Teja's portfolio site. Ravi is a backend engineer (5+ years Java, Spring Boot, microservices, AWS) who builds production-grade AI automation, and founder of Ango Digital Tech." The full brief (visitors, journeys, 12 sections, rules, scope, done-when) is captured in the requirements below.
+**Input**: User description: "Build the homepage of Ravi Teja's portfolio site. Ravi is a backend engineer (4+ years Java, Spring Boot, microservices, AWS) who builds production-grade AI automation, and founder of Angodigital Technologies." The full brief (visitors, journeys, 12 sections, rules, scope, done-when) is captured in the requirements below.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -22,7 +22,7 @@ A client lands from a proposal, reads the headline, scrolls to the featured work
 
 **Acceptance Scenarios**:
 
-1. **Given** a client on the homepage, **When** they read the first screen, **Then** they see the headline "I build AI agents that actually run in production.", the subhead and a Hire me on Upwork button.
+1. **Given** a client on the homepage, **When** they read the first screen, **Then** they see the headline "I build backends, apps and AI that run in production.", the subhead and a Hire me on Upwork button.
 2. **Given** a client in the hero, **When** they select See my work, **Then** the page moves to the featured work section.
 3. **Given** any Hire me on Upwork button on the page, **When** the client selects it, **Then** the configured Upwork profile opens in a new tab and the homepage stays open.
 4. **Given** the Upwork URL is changed in its one configured place, **When** the site is rebuilt, **Then** every Hire me on Upwork button opens the new URL.
@@ -118,7 +118,7 @@ Ravi may add a source tag to a proposal link, such as `?src=upwork-chatbot`. The
 
 - **FR-001**: The homepage MUST show its sections in this order: top bar, hero, proof strip, services, featured work, how I work, tech stack, about snippet, testimonials, FAQ, closing call to action, footer.
 - **FR-002**: The top bar MUST show the name wordmark, links to Work, Services and About, and a Hire me on Upwork button. A link to a section that is hidden MUST be hidden too. The top bar MUST stay fixed at the top of the screen while scrolling, and MUST NOT hide keyboard focus or the target of an in-page link.
-- **FR-003**: The hero MUST show the headline "I build AI agents that actually run in production.", a subhead, a See my work button, a Hire me on Upwork button, a photo or generated illustration, and the trust line "Founder, Ango Digital Tech · 5+ years production backend · Healthcare/HL7 experience". On narrow screens the order MUST be: headline, subhead, Hire me on Upwork button, See my work button, trust line, photo. Ango Digital Tech MUST be plain text here.
+- **FR-003**: The hero MUST show the headline "I build backends, apps and AI that run in production.", a subhead, a See my work button, a Hire me on Upwork button, a photo or generated illustration, and the trust line "Founder, Angodigital Technologies · 4+ years production backend · Web and mobile apps · Healthcare, e-commerce and ERP". On narrow screens the order MUST be: headline, subhead, Hire me on Upwork button, See my work button, trust line, photo. Angodigital Technologies MUST be plain text here.
 - **FR-004**: The See my work button MUST move the visitor to the featured work section.
 - **FR-005**: The proof strip MUST show up to 4 metrics, each with a value and a label.
 - **FR-006**: The services section MUST show one card per service, starting with the four named services: AI agents and automation, Backend and APIs, Healthcare integrations (HL7), and Websites and web apps. Each card MUST have an outcome headline, one line, three example deliverables, and a link to its service page once that page exists.
@@ -129,7 +129,7 @@ Ravi may add a source tag to a proposal link, such as `?src=upwork-chatbot`. The
 - **FR-011**: The testimonials section MUST show up to 3 client quotes, with name, role and company where approved.
 - **FR-012**: The FAQ MUST show 5 expandable questions covering fixed price or hourly, code ownership, NDA, communication, and patient data. Each MUST open and close by keyboard as well as by pointer.
 - **FR-013**: The closing section MUST show "Have a process that eats your team's time? Let's automate it." and a Hire me on Upwork button.
-- **FR-014**: The footer MUST show the name, the year, "Founder of Ango Digital Tech" as plain text, and links to Work, Services and About.
+- **FR-014**: The footer MUST show the name, the year, "Founder of Angodigital Technologies" as plain text, and links to Work, Services and About.
 
 **Hire button**
 
@@ -199,7 +199,7 @@ Ravi may add a source tag to a proposal link, such as `?src=upwork-chatbot`. The
 - **AikaIQ**: it is Ravi's own product, so its card's client type says so.
 - **Approval**: Ravi decides what is approved and marks it in content. A client's name or quote is marked approved only after that client agrees in writing. Written approvals are kept privately, outside this repo.
 - **Public repo**: this repo is public, so anything committed can be read even if the site hides it. Real client names, quotes and metrics are added only once approved.
-- **Banned domains**: the list includes LinkedIn, X, Instagram, Facebook, WhatsApp, Telegram, booking services such as Calendly, and any Ango Digital Tech website with contact details. The homepage has no GitHub link. If one is added later, that GitHub profile must show no email address.
+- **Banned domains**: the list includes LinkedIn, X, Instagram, Facebook, WhatsApp, Telegram, booking services such as Calendly, and any Angodigital Technologies website with contact details. The homepage has no GitHub link. If one is added later, that GitHub profile must show no email address.
 - **Year**: the footer year is set when the site is built.
 - **Generated images**: covers and illustrations are clearly illustrations. The portfolio plan's real photo stays the better option, and takes over as soon as one is added to content.
 - **Analytics**: none in v1, at the project owner's direction, so source tags aren't recorded anywhere. Any analytics added later must be cookieless.

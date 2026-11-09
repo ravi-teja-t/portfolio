@@ -12,8 +12,9 @@ type Layout = {
   outputs: Box[];
 };
 
-// Work arrives in no particular order on the left, and leaves sorted on the right. The curves
-// are loose going in and square coming out, which is the whole point of the drawing.
+// Work from each domain (healthcare, e-commerce, ERP, apps, support) arrives in no particular
+// order on the left, passes through one platform of APIs, apps and AI, and leaves sorted on the
+// right. The curves are loose going in and square coming out, which is the point of the drawing.
 const WIDE: Layout = {
   className: "hidden md:block",
   width: 1280,
@@ -23,15 +24,15 @@ const WIDE: Layout = {
   agent: { x: 540, y: 74, width: 200, height: 192 },
   bend: 850,
   inputs: [
-    { x: 8, y: 18, label: "Ticket" },
-    { x: 92, y: 88, label: "Invoice" },
-    { x: 20, y: 152, label: "HL7 message" },
-    { x: 120, y: 218, label: "Form" },
-    { x: 40, y: 286, label: "Alert" },
+    { x: 8, y: 18, label: "HL7 message" },
+    { x: 92, y: 88, label: "Order" },
+    { x: 20, y: 152, label: "Invoice" },
+    { x: 120, y: 218, label: "App request" },
+    { x: 40, y: 286, label: "Support ticket" },
   ],
   outputs: [
-    { x: 1140, y: 44, label: "Resolved" },
-    { x: 1140, y: 152, label: "Routed" },
+    { x: 1140, y: 44, label: "Records synced" },
+    { x: 1140, y: 152, label: "App updated" },
     { x: 1140, y: 260, label: "Human review" },
   ],
 };
@@ -45,18 +46,18 @@ const COMPACT: Layout = {
   agent: { x: 134, y: 42, width: 92, height: 148 },
   bend: 250,
   inputs: [
-    { x: 1, y: 14, label: "Ticket" },
-    { x: 14, y: 100, label: "Invoice" },
-    { x: 1, y: 188, label: "Alert" },
+    { x: 1, y: 14, label: "HL7" },
+    { x: 14, y: 100, label: "Order" },
+    { x: 1, y: 188, label: "Invoice" },
   ],
   outputs: [
-    { x: 281, y: 14, label: "Resolved" },
-    { x: 281, y: 100, label: "Routed" },
+    { x: 281, y: 14, label: "Synced" },
+    { x: 281, y: 100, label: "Updated" },
     { x: 281, y: 188, label: "Human" },
   ],
 };
 
-const CELLS = ["Read", "Decide", "Act"];
+const CELLS = ["API", "App", "AI"];
 
 function delayed(delay: number) {
   return `--delay:${delay}ms`;
@@ -122,7 +123,7 @@ function schematic(layout: Layout) {
     ...inputs.map((box, index) => chip(box, layout, index * 80)),
     `<g class="hero-node" style="${popped(450)}">`,
     `<rect x="${agent.x}" y="${agent.y}" width="${agent.width}" height="${agent.height}" class="schematic-agent" stroke-width="1.5"></rect>`,
-    `<text x="${agent.x + 12}" y="${agent.y + 24}" font-size="${font}" class="schematic-label">Agent</text>`,
+    `<text x="${agent.x + 12}" y="${agent.y + 24}" font-size="${font}" class="schematic-label">Platform</text>`,
     ...cells,
     `</g>`,
     ...outputs.map((box, index) => chip(box, layout, 1500 + index * 110)),

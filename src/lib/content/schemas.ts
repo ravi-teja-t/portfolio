@@ -110,6 +110,16 @@ export const caseStudySchema = z.object({
   result: text,
   stack: z.array(text).min(1),
   image: realImageSchema.optional(),
+  // Labels for the generated cover diagram. Read by scripts/generate-images.mjs.
+  diagram: z
+    .object({
+      inputs: z.array(text).min(1).max(5),
+      core: text,
+      steps: z.array(text).min(1).max(5),
+      tools: z.array(text).min(1).max(5),
+      outputs: z.array(text).min(1).max(3),
+    })
+    .optional(),
   hasPage: z.boolean().default(false),
 });
 

@@ -11,3 +11,14 @@ export function tileName(name) {
     .replace(/^-|-$/g, "");
   return `tile-${slug}`;
 }
+
+// Ravi's photo. The generator makes the about photo and the favicons from it, so replacing this
+// one file updates both. `face` is the square around the face, as fractions of the photo's width.
+export const PORTRAIT = {
+  source: "public/images/stock/ravi_formal.jpg",
+  name: "portrait",
+  size: 640,
+  face: { left: 0.24, top: 0.075, size: 0.52 },
+};
+export const ICON_SIZES = [32, 192];
+export const TOUCH_ICON_SIZE = 180;
