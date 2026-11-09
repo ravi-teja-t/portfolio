@@ -1,10 +1,19 @@
-name: Quality
+name: Quality and deploy
 
 on:
   pull_request:
     branches: [main]
   push:
     branches: [main]
+  workflow_dispatch:
+
+# One deployment at a time. A newer push queues behind a running deploy instead of cancelling it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
 
 jobs:
   gates:
@@ -25,3 +34,41 @@ jobs:
       - run: pnpm test:checks
       - run: pnpm test:e2e
       - run: pnpm test:lighthouse
+
+  # Publishes only on a push to main (or a manual run), and only after every gate passes.
+  build:
+    needs: gates
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - id: pages
+        uses: actions/configure-pages@v5
+      - run: pnpm install --frozen-lockfile
+      # base_path is "/portfolio" for this project site, or "" if a custom domain is added later.
+      - run: pnpm build
+        env:
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

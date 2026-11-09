@@ -11,7 +11,6 @@
 | `pnpm test:checks` | Proves the scan and content validation catch bad input | A bad input gets through |
 | `pnpm test:e2e` | Builds the test and real content, runs Playwright and axe | Any test or violation |
 | `pnpm test:lighthouse` | Audits the homepage and not-found page on test and real content, on phone and desktop settings, using the median of 3 runs. Run `test:e2e` first, because it uses those builds | Performance, accessibility, best practices or SEO is under 95, or scripts exceed 220 KB compressed |
-| `pnpm site:deploy` | Runs every gate, builds with the `/portfolio` base path, then publishes `out/` to the `gh-pages` branch | Any gate fails, or there are uncommitted changes |
 | `pnpm images` | Generates images on their own, for use with `next dev` | The generator can't write an image |
 
 All checks exit non-zero on failure and print the file, the rule and the match.
@@ -53,23 +52,20 @@ Content validation runs in the loader during the build. It also rejects placehol
 
 `.github/workflows/quality.yml` runs on every pull request to `main` and every push to `main`: ESLint, Prettier, typecheck, `test:checks`, `test:e2e`, `test:lighthouse`. It doesn't deploy.
 
-A required status check on `main` must be turned on in GitHub for this to block merges. Direct pushes to `main` are checked after the fact, but they can't change the live site.
+A required status check on `main` must be turned on in GitHub for this to block merges. A push to `main` publishes the site only if every gate passes.
 
 ## Deployment
 
-GitHub Actions doesn't deploy. `pnpm site:deploy` runs `scripts/deploy.mjs` on Ravi's machine:
+GitHub Actions deploys. On every push to `main` (or a manual run), `.github/workflows/quality.yml`:
 
-1. Stop if there are uncommitted changes.
-2. Run lint, format, typecheck, `test:checks`, `test:e2e` and `test:lighthouse`, stopping at the first failure.
-3. Run `pnpm build` with `PAGES_BASE_PATH=/portfolio`.
-4. Publish `out/` with `gh-pages -d out -b gh-pages --nojekyll`, using the source commit in the message.
-
-The script is `site:deploy` because `pnpm deploy` is a built-in pnpm command.
+1. Runs the `gates` job: lint, format, typecheck, `test:checks`, `test:e2e` and `test:lighthouse`.
+2. Only if every gate passes, runs `pnpm build` with `PAGES_BASE_PATH` set to the base path from `actions/configure-pages` (`/portfolio`).
+3. Uploads `out/` and publishes it with `actions/deploy-pages`. Pull requests run the gates but never deploy.
 
 | Setting | Value |
 |---|---|
 | Site address | `https://ravi-teja-t.github.io/portfolio/` |
-| Repo setting | Settings, Pages, Source: Deploy from a branch, `gh-pages`, root folder |
+| Repo setting | Settings, Pages, Build and deployment, Source: GitHub Actions |
 | Node version | `.node-version` in the repo |
 | pnpm version | `packageManager` in `package.json` |
 
