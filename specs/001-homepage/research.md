@@ -138,15 +138,16 @@ The hero illustration is a build-time inline SVG component, not an image file, s
 
 - Clear Tailwind's default colours, so only project tokens exist.
 - Set `--spacing` to `0.5rem`, so spacing utilities step in 8 px.
-- Accent: deep blue `#1D4ED8`, used only by `HireButton`. White on it has a contrast ratio of 6.70:1, calculated, which passes AA.
-- Focus rings, the scroll progress line and the active nav marker use near-black, so the accent stays exclusive.
+- Accent: orange `#FF4F00`, used only by `HireButton`. Its near-black label (`#101110`) has a contrast ratio of 5.74:1, calculated, which passes AA. Every Hire button sits on an ink surface.
+- Focus rings use `currentColor`, so they match the surface they sit on. The Hire button's label matches the ink around it, so its ring uses the accent instead (5.74:1 against ink); it is the one element allowed the accent. The scroll progress line and the active nav marker never use the accent.
+- Text selection uses `#A9A99F` with near-black text (7.87:1), which stands out on both the light (`#EEEDE7`) and the ink (`#101110`, 7.99:1) surfaces.
 - Fonts: Bricolage Grotesque, IBM Plex Sans and JetBrains Mono through `next/font/google`. **Docs** fonts are served from the site's own domain, with no requests to Google at page load. The build itself does need network access. JetBrains Mono uses `preload: false`, because the homepage shows no code.
 
 **Enforcement**: a browser test reads computed colours on every element and fails if the accent appears outside `[data-hire]`.
 
 ## R7. Quality gates
 
-**Decision**: all run in GitHub Actions on every pull request and push to `main`, and again in `pnpm site:deploy` before anything is published: ESLint, Prettier, `tsc --noEmit`, the compliance scan, Playwright with axe, and Lighthouse CI on phone and desktop settings.
+**Decision**: all run in GitHub Actions on every pull request and push to `main`, and the deploy jobs in the same workflow run only after they all pass: ESLint, Prettier, `tsc --noEmit`, the compliance scan, Playwright with axe, and Lighthouse CI on phone and desktop settings.
 
 **Rationale**:
 
@@ -167,7 +168,7 @@ The hero illustration is a build-time inline SVG component, not an image file, s
 
 **Decision**: pnpm 12, pinned with `packageManager` in `package.json`, and Node 26 pinned with `.node-version`. Replace `package-lock.json` with `pnpm-lock.yaml`.
 
-**Rationale**: Node 26.13.0 is what winget installed as LTS. `pnpm` isn't installed, and `corepack` isn't available on this machine, so pnpm has to be installed directly. In GitHub Actions, the pnpm setup action reads `packageManager`. The publish script is named `site:deploy` because `pnpm deploy` is a built-in pnpm command. Recent pnpm versions can block dependency install scripts, so if that affects `sharp` or Playwright, allow them explicitly.
+**Rationale**: Node 26.13.0 is what winget installed as LTS. `pnpm` isn't installed, and `corepack` isn't available on this machine, so pnpm has to be installed directly. In GitHub Actions, the pnpm setup action reads `packageManager`. Recent pnpm versions can block dependency install scripts, so if that affects `sharp` or Playwright, allow them explicitly.
 
 ## R9. Production-ready content
 
@@ -198,7 +199,7 @@ Unlisted case studies must be marked noindex (003 FR-015). GitHub Pages can't se
 
 **Lighthouse must audit `/`**, not `/index.html`.
 
-**Not tested**: publishing itself, because that changes the live site. `scripts/deploy.mjs` was run only as far as refusing uncommitted changes.
+**Not tested**: publishing itself, because that changes the live site. The production build with `PAGES_BASE_PATH=/portfolio` was run locally and every asset resolved under `/portfolio/`; the GitHub Actions deploy runs on the first push to `main`.
 
 ## Sources
 

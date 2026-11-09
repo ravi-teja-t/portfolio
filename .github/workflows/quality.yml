@@ -34,6 +34,17 @@ jobs:
       - run: pnpm test:checks
       - run: pnpm test:e2e
       - run: pnpm test:lighthouse
+      # Keeps the full Lighthouse and Playwright reports when a gate fails, so the cause can be
+      # read from the run's Artifacts instead of guessed.
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-reports
+          path: |
+            .lighthouseci/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
 
   # Publishes only on a push to main (or a manual run), and only after every gate passes.
   build:
@@ -41,6 +52,10 @@ jobs:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # configure-pages reads the Pages site through the API, which needs pages: read.
+    permissions:
+      contents: read
+      pages: read
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

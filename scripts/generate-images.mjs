@@ -173,13 +173,15 @@ function iconSvg() {
   </svg>`;
 }
 
+// The headline keeps the left column: at 66px a 16-character line ends near x=650, and the
+// flow lines start at x=720, so they never cross the text.
 function shareSvg(name, headline) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
     <rect width="1200" height="630" fill="${color.ink}"/>
     ${gridLines(1200, 630, 70)}
-    ${flow(name, 640, 40, 560, 550, 48)}
+    ${flow(name, 720, 40, 440, 550, 40)}
     ${textLines([name], 72, 110, 32, color["on-ink-muted"], 600)}
-    ${textLines(wrap(headline, 20), 72, 230, 66, color["on-ink"])}
+    ${textLines(wrap(headline, 16).slice(0, 5), 72, 210, 66, color["on-ink"])}
   </svg>`;
 }
 

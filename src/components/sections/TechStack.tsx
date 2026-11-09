@@ -13,19 +13,21 @@ function tileSrc(item: { name: string; logo?: string }) {
     : `${basePath}${GENERATED_PATH}/${tileName(item.name)}.svg`;
 }
 
+function escapeHtml(text: string) {
+  return text
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
 // Moves only with the scroll position, so it never runs on its own. The list below carries the
-// same names for assistive technology.
+// same names for assistive technology. Built as plain markup so React hydrates one node per row
+// rather than every repeated name, which keeps phone start-up under budget.
 function Ticker({ names, className }: { names: string[]; className: string }) {
   const line = Array.from({ length: TICKER_REPEATS }, () => names).flat();
-  return (
-    <div className={`ticker-row ${className}`}>
-      {line.map((name, index) => (
-        <span key={`${name}-${index}`} className="px-2">
-          {name}
-        </span>
-      ))}
-    </div>
-  );
+  const markup = line.map((name) => `<span class="px-2">${escapeHtml(name)}</span>`).join("");
+  return <div className={`ticker-row ${className}`} dangerouslySetInnerHTML={{ __html: markup }} />;
 }
 
 export function TechStack() {

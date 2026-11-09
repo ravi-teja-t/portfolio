@@ -9,11 +9,15 @@ type Props = {
   image?: RealImage;
   sizes: string;
   className?: string;
+  /** Load right away with high priority, for an image on the first screen. */
+  eager?: boolean;
 };
 
 // A real image replaces the generated one. Generated images use empty alt text, because their
 // title or name sits next to them as real text.
-export function ResponsiveImage({ generated, image, sizes, className }: Props) {
+export function ResponsiveImage({ generated, image, sizes, className, eager = false }: Props) {
+  const loading = eager ? "eager" : "lazy";
+  const fetchPriority = eager ? "high" : "auto";
   if (image) {
     const src = `${basePath}/images/${image.src}`;
     return (
@@ -24,7 +28,8 @@ export function ResponsiveImage({ generated, image, sizes, className }: Props) {
           alt={image.alt}
           width={image.width}
           height={image.height}
-          loading="lazy"
+          loading={loading}
+          fetchPriority={fetchPriority}
           decoding="async"
           className={className}
         />
@@ -49,7 +54,8 @@ export function ResponsiveImage({ generated, image, sizes, className }: Props) {
         alt=""
         width={largest}
         height={Math.round(largest * ratio)}
-        loading="lazy"
+        loading={loading}
+        fetchPriority={fetchPriority}
         decoding="async"
         className={className}
       />

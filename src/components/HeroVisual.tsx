@@ -1,5 +1,3 @@
-import type { CSSProperties } from "react";
-
 type Box = { x: number; y: number; label: string };
 
 type Layout = {
@@ -60,12 +58,12 @@ const COMPACT: Layout = {
 
 const CELLS = ["Read", "Decide", "Act"];
 
-function delayed(delay: number): CSSProperties {
-  return { "--delay": `${delay}ms` } as CSSProperties;
+function delayed(delay: number) {
+  return `--delay:${delay}ms`;
 }
 
-function popped(delay: number): CSSProperties {
-  return { ...delayed(delay), transformBox: "fill-box", transformOrigin: "center" };
+function popped(delay: number) {
+  return `${delayed(delay)};transform-box:fill-box;transform-origin:center`;
 }
 
 // Spreads connection points evenly down one side of the agent block.
@@ -89,135 +87,56 @@ function outputPath(layout: Layout, box: Box, index: number) {
   return `M${startX} ${startY} H${layout.bend + index * 8} V${endY} H${box.x}`;
 }
 
-function Chip({ box, layout, delay }: { box: Box; layout: Layout; delay: number }) {
+function path(d: string, className: string, delay: number, strokeWidth: number) {
+  return `<path d="${d}" pathLength="1" class="${className}" style="${delayed(delay)}" stroke-width="${strokeWidth}"></path>`;
+}
+
+function chip(box: Box, layout: Layout, delay: number) {
   const { width, height } = layout.chip;
   return (
-    <g className="hero-node" style={popped(delay)}>
-      <rect
-        x={box.x}
-        y={box.y}
-        width={width}
-        height={height}
-        className="schematic-box"
-        strokeWidth={1}
-      />
-      <text
-        x={box.x + width / 2}
-        y={box.y + height / 2}
-        dy="0.35em"
-        textAnchor="middle"
-        fontSize={layout.font}
-      >
-        {box.label}
-      </text>
-    </g>
+    `<g class="hero-node" style="${popped(delay)}">` +
+    `<rect x="${box.x}" y="${box.y}" width="${width}" height="${height}" class="schematic-box" stroke-width="1"></rect>` +
+    `<text x="${box.x + width / 2}" y="${box.y + height / 2}" dy="0.35em" text-anchor="middle" font-size="${layout.font}">${box.label}</text>` +
+    `</g>`
   );
 }
 
-function Schematic({ layout }: { layout: Layout }) {
+function schematic(layout: Layout) {
   const { agent, inputs, outputs, font } = layout;
   const ins = inputs.map((box, index) => inputPath(layout, box, index));
   const outs = outputs.map((box, index) => outputPath(layout, box, index));
   const cellHeight = (agent.height - 44) / CELLS.length;
-  return (
-    <svg
-      viewBox={`0 0 ${layout.width} ${layout.height}`}
-      aria-hidden
-      className={`h-auto w-full overflow-visible ${layout.className}`}
-      fill="none"
-    >
-      {ins.map((d, index) => (
-        <path
-          key={d}
-          d={d}
-          pathLength={1}
-          className="hero-line"
-          style={delayed(150 + index * 90)}
-          strokeWidth={1}
-        />
-      ))}
-      {outs.map((d, index) => (
-        <path
-          key={d}
-          d={d}
-          pathLength={1}
-          className="hero-line"
-          style={delayed(1100 + index * 120)}
-          strokeWidth={1}
-        />
-      ))}
-      {ins.map((d, index) => (
-        <path
-          key={`pulse-${d}`}
-          d={d}
-          pathLength={1}
-          className="hero-pulse"
-          style={delayed(900 + index * 130)}
-          strokeWidth={3}
-        />
-      ))}
-      {outs.map((d, index) => (
-        <path
-          key={`pulse-${d}`}
-          d={d}
-          pathLength={1}
-          className="hero-pulse"
-          style={delayed(2900 + index * 170)}
-          strokeWidth={3}
-        />
-      ))}
-      {inputs.map((box, index) => (
-        <Chip key={box.label} box={box} layout={layout} delay={index * 80} />
-      ))}
-      <g className="hero-node" style={popped(450)}>
-        <rect
-          x={agent.x}
-          y={agent.y}
-          width={agent.width}
-          height={agent.height}
-          className="schematic-agent"
-          strokeWidth={1.5}
-        />
-        <text x={agent.x + 12} y={agent.y + 24} fontSize={font} className="schematic-label">
-          Agent
-        </text>
-        {CELLS.map((label, index) => (
-          <g key={label}>
-            <rect
-              x={agent.x + 12}
-              y={agent.y + 34 + index * cellHeight}
-              width={agent.width - 24}
-              height={cellHeight - 6}
-              className="schematic-cell"
-              style={delayed(2000 + index * 320)}
-              strokeWidth={1}
-            />
-            <text
-              x={agent.x + agent.width / 2}
-              y={agent.y + 34 + index * cellHeight + (cellHeight - 6) / 2}
-              dy="0.35em"
-              textAnchor="middle"
-              fontSize={font}
-            >
-              {label}
-            </text>
-          </g>
-        ))}
-      </g>
-      {outputs.map((box, index) => (
-        <Chip key={box.label} box={box} layout={layout} delay={1500 + index * 110} />
-      ))}
-    </svg>
-  );
+  const cells = CELLS.map((label, index) => {
+    const y = agent.y + 34 + index * cellHeight;
+    return (
+      `<g><rect x="${agent.x + 12}" y="${y}" width="${agent.width - 24}" height="${cellHeight - 6}" class="schematic-cell" style="${delayed(2000 + index * 320)}" stroke-width="1"></rect>` +
+      `<text x="${agent.x + agent.width / 2}" y="${y + (cellHeight - 6) / 2}" dy="0.35em" text-anchor="middle" font-size="${font}">${label}</text></g>`
+    );
+  });
+  return [
+    `<svg viewBox="0 0 ${layout.width} ${layout.height}" aria-hidden="true" class="h-auto w-full overflow-visible ${layout.className}" fill="none">`,
+    ...ins.map((d, index) => path(d, "hero-line", 150 + index * 90, 1)),
+    ...outs.map((d, index) => path(d, "hero-line", 1100 + index * 120, 1)),
+    ...ins.map((d, index) => path(d, "hero-pulse", 900 + index * 130, 3)),
+    ...outs.map((d, index) => path(d, "hero-pulse", 2900 + index * 170, 3)),
+    ...inputs.map((box, index) => chip(box, layout, index * 80)),
+    `<g class="hero-node" style="${popped(450)}">`,
+    `<rect x="${agent.x}" y="${agent.y}" width="${agent.width}" height="${agent.height}" class="schematic-agent" stroke-width="1.5"></rect>`,
+    `<text x="${agent.x + 12}" y="${agent.y + 24}" font-size="${font}" class="schematic-label">Agent</text>`,
+    ...cells,
+    `</g>`,
+    ...outputs.map((box, index) => chip(box, layout, 1500 + index * 110)),
+    `</svg>`,
+  ].join("");
 }
+
+// Built once as plain markup: React hydrates the wrapper as a single node instead of walking
+// about a hundred SVG elements that never change, which keeps phone start-up under budget.
+// The labels are fixed strings above, never content, so nothing here needs escaping.
+const MARKUP = schematic(WIDE) + schematic(COMPACT);
 
 // Decorative, so it's hidden from assistive technology. The base styles show the finished
 // drawing, and the opening run only plays under prefers-reduced-motion: no-preference.
 export function HeroVisual() {
-  return (
-    <div className="schematic">
-      <Schematic layout={WIDE} />
-      <Schematic layout={COMPACT} />
-    </div>
-  );
+  return <div className="schematic" dangerouslySetInnerHTML={{ __html: MARKUP }} />;
 }

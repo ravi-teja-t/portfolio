@@ -25,7 +25,7 @@
 - [x] CHK007 - Does the spec define whether a privacy notice is needed, given that analytics data goes to a third party even without cookies? [Gap, Constitution VIII, Spec §FR-028]
   - Resolved: Spec Assumptions: no privacy notice in v1. With no analytics or third-party scripts, nothing leaves the visitor's browser. A practical judgement, not legal advice.
 - [x] CHK008 - Are the rules for preview deployments defined, including whether public preview addresses must be kept out of search results and held to the same compliance rules? [Gap, Plan §Summary, Research §R1]
-  - Resolved: GitHub Pages has no preview deployments, and publishing is by `pnpm site:deploy`, so the question no longer applies. All gates still run on every pull request and push to `main`.
+  - Resolved: GitHub Pages has no preview deployments, and publishing happens only from GitHub Actions on a push to `main`, so the question no longer applies. All gates still run on every pull request and push to `main`.
 
 ## Requirement Clarity
 
@@ -94,7 +94,7 @@
 - [x] CHK031 - Are requirements defined for serving the site under the `/portfolio/` path, including assets that don't get the base path automatically? [Completeness, Spec §FR-036, Research §R1]
   - Resolved: FR-036, T018 adds the path to images, and T050 tests a build under it.
 - [x] CHK032 - Is the loss of security headers and preview deployments on GitHub Pages stated and accepted? [Gap, Spec §Assumptions, Research §R1]
-  - Resolved: Spec Assumptions and research R1. Low practical risk, because the site has no forms, logins or user data. A direct push to `main` can't publish, because `pnpm site:deploy` runs every gate first.
+  - Resolved: Spec Assumptions and research R1. Low practical risk, because the site has no forms, logins or user data. A push to `main` publishes only after every gate passes in GitHub Actions.
 - [x] CHK033 - Do image requirements prevent generated images from misleading a client, such as a fake portrait or fake screenshot? [Consistency, Constitution II, Spec §FR-034]
   - Resolved: FR-034 and research R4 rule both out, and a real photo replaces the illustration with no code change.
 - [x] CHK034 - Is "production ready" defined, including what happens to links for pages that don't exist yet? [Clarity, Spec §FR-035, Research §R9]
