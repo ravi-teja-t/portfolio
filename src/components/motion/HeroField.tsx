@@ -47,6 +47,9 @@ export function HeroField() {
 
     function leave() {
       if (!field || !hero) return;
+      // A frame queued by the last move would otherwise write the edge offset back.
+      cancelAnimationFrame(frame);
+      frame = 0;
       delete field.dataset.active;
       hero.style.setProperty("--nx", "0");
       hero.style.setProperty("--ny", "0");

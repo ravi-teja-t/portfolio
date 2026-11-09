@@ -109,7 +109,7 @@ The task text below is the original plan. These things were built differently, f
 - [X] T036 [P] Create `tests/e2e/helpers/pages.ts`, listing every `index.html` page under `.fixture-out/full/`, plus `404.html` as the not-found page. Skip the `404/` and `_not-found/` folders, because they're the same page, so new pages are tested automatically
 - [X] T037 [P] Create `lighthouserc.json` (mobile) and `lighthouserc.desktop.json` (desktop preset), and `tests/run-lighthouse.mjs`, which runs both configs on `.fixture-out/full` and `.fixture-out/real`, setting `staticDistDir` for each run. Audit the homepage and `404.html`, with 3 runs, `aggregationMethod: "median-run"`, `minScore: 0.95` on `performance`, `accessibility`, `best-practices` and `seo`, and `resource-summary:script:size` limited to 225280 bytes (220 KB compressed)
 - [X] T038 Create `.github/workflows/quality.yml`, running on pull requests to `main` and pushes to `main`, with no deploy step: set up pnpm from `packageManager` and Node from `.node-version`, then run `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm test:checks`, `pnpm test:e2e` and `pnpm test:lighthouse`, installing Chromium with its dependencies first
-- [X] T039 Create `scripts/deploy.mjs`, per the Deployment section of `contracts/build-checks.md`: stop if `git status --porcelain` shows changes; run lint, format check, typecheck, `test:checks`, `test:e2e` and `test:lighthouse`, stopping at the first failure; run `pnpm build` with `PAGES_BASE_PATH=/portfolio`; publish with `gh-pages -d out -b gh-pages --nojekyll`, putting the source commit in the message. Set environment variables in Node, so this works on Windows
+- [X] T039 (Superseded: deployment now runs from GitHub Actions in `.github/workflows/quality.yml`, and `scripts/deploy.mjs` was removed.) Create `scripts/deploy.mjs`, per the Deployment section of `contracts/build-checks.md`: stop if `git status --porcelain` shows changes; run lint, format check, typecheck, `test:checks`, `test:e2e` and `test:lighthouse`, stopping at the first failure; run `pnpm build` with `PAGES_BASE_PATH=/portfolio`; publish with `gh-pages -d out -b gh-pages --nojekyll`, putting the source commit in the message. Set environment variables in Node, so this works on Windows
 
 ### Seed content
 
@@ -245,7 +245,7 @@ No implementation task is needed, because no code reads `src`.
 
 - [X] T076 Run `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm test:checks`, `pnpm test:e2e`, `pnpm test:lighthouse` and `pnpm build`, in that order, and fix every failure
 - [X] T077 If `test:lighthouse` scores under 95 or scripts exceed 220 KB, cut effects in this order: `ActiveNav`, `TimelineLine`, `ScrollProgress`, then `Stagger`, keeping `Reveal` last. Record the final homepage script size in `specs/001-homepage/research.md`
-- [ ] T078 Ravi: read the drafted content, commit, and run `pnpm site:deploy`. In GitHub, set Settings, Pages, Source to Deploy from a branch, `gh-pages`, root folder, and turn on a required status check on `main`. Then run the manual checks in `specs/001-homepage/quickstart.md`, including a Lighthouse run on the live site
+- [ ] T078 Ravi: read the drafted content. In GitHub, set Settings, Pages, Build and deployment, Source to GitHub Actions, and turn on a required status check on `main`. Then commit and push to `main`; the "Quality and deploy" workflow runs every gate and deploys only if all pass. Then run the manual checks in `specs/001-homepage/quickstart.md`, including a Lighthouse run on the live site
 
 ---
 

@@ -79,9 +79,10 @@
     text-wrap: balance;
   }
 
+  /* A mid tone that stands out on both the light and the ink surfaces. */
   ::selection {
-    background: var(--color-text);
-    color: var(--color-bg);
+    background: var(--color-on-ink-muted);
+    color: var(--color-text);
   }
 
   :focus-visible {
@@ -109,6 +110,11 @@
   }
 
   /* Buttons */
+  /* The Hire button's text colour matches the ink around it, so its ring uses the accent. */
+  [data-hire]:focus-visible {
+    outline-color: var(--color-accent);
+  }
+
   .hire-arrow {
     transition: transform 250ms var(--ease-out);
   }
@@ -168,18 +174,20 @@
     position: relative;
     transition:
       background-color 250ms var(--ease-out),
-      color 250ms var(--ease-out);
+      box-shadow 250ms var(--ease-out);
   }
 
+  /* Tinted from currentColor rather than inverted, so it shows on light and ink sections alike
+     and the muted text inside keeps its contrast. */
   .card-link:focus-within {
-    background: var(--color-text);
-    color: var(--color-bg);
+    background: color-mix(in oklab, currentColor 7%, transparent);
+    box-shadow: inset 3px 0 0 currentColor;
   }
 
   @media (hover: hover) {
     .card-link:hover {
-      background: var(--color-text);
-      color: var(--color-bg);
+      background: color-mix(in oklab, currentColor 7%, transparent);
+      box-shadow: inset 3px 0 0 currentColor;
     }
   }
 

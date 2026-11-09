@@ -16,7 +16,7 @@ This plan also sets up the foundation features 002 to 004 reuse: content loading
 
 **Language/Version**: TypeScript 5 in strict mode, Node.js 26 (current LTS)
 
-**Primary Dependencies**: Next.js 16.4.5 (App Router, latest stable), React 19.3, Tailwind CSS 4, framer-motion 14. New: `yaml`, `zod`. New for development: `prettier`, `sharp`, `gh-pages`, `@playwright/test`, `@axe-core/playwright`, `@lhci/cli`, `serve`
+**Primary Dependencies**: Next.js 16.4.5 (App Router, latest stable), React 19.3, Tailwind CSS 4, framer-motion 14. New: `yaml`, `zod`. New for development: `prettier`, `sharp`, `@playwright/test`, `@axe-core/playwright`, `@lhci/cli`, `serve`
 
 **Package Manager**: pnpm 12
 
@@ -24,7 +24,7 @@ This plan also sets up the foundation features 002 to 004 reuse: content loading
 
 **Testing**: Playwright with axe for browser tests, Node's built-in test runner for build checks, Lighthouse CI for scores
 
-**Target Platform**: Static files on GitHub Pages at `https://ravi-teja-t.github.io/portfolio/`, published from a `gh-pages` branch, for current browsers on phone and desktop
+**Target Platform**: Static files on GitHub Pages at `https://ravi-teja-t.github.io/portfolio/`, deployed by GitHub Actions on every push to `main`, for current browsers on phone and desktop
 
 **Project Type**: Static website
 
@@ -91,7 +91,6 @@ scripts/                       # New
 ├── banned-domains.mjs
 ├── image-sizes.mjs            # Image names and sizes, shared with ResponsiveImage
 ├── strip-not-found-scripts.mjs
-└── deploy.mjs                 # Runs the gates, then publishes to `gh-pages`
 
 src/
 ├── app/
@@ -148,13 +147,13 @@ README.md                      # Changed: remove SQLite mention
 2. **Foundation**: tokens, fonts, `site.config.ts`, content schemas and loader, image generator, `HireButton`, motion components, top bar, footer.
 3. **Gates**: compliance scan, fixtures, browser tests and Lighthouse, so later work is checked as it lands.
 4. **Sections**: build the 12 sections, using the `ui-ux-pro-max` skill for component-level checks. The portfolio plan's design choices take priority over its suggestions.
-5. **Deployment**: `pnpm site:deploy` and the manual checks.
+5. **Deployment**: push to `main`, which runs the gates and deploys from `.github/workflows/quality.yml`, then the manual checks.
 
 ## Dependencies and Open Items
 
 | Item | Owner | Blocks |
 |---|---|---|
-| After the first publish, set Settings, Pages, Source to Deploy from a branch, `gh-pages`, root folder | Repo owner | The new site appearing |
+| Before the first deploy, set Settings, Pages, Build and deployment, Source to GitHub Actions | Repo owner | The new site appearing |
 | Required status check on `main` in GitHub | Repo owner | Merge blocking |
 | Read the drafted FAQ answers, about text and tech list | Ravi | Going live, because these are claims in Ravi's name |
 | Real photo, metrics, testimonials and more case studies | Ravi | Those parts appearing. The page is complete without them |

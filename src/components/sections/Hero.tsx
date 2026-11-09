@@ -7,7 +7,11 @@ import { getHome } from "@/lib/content/select";
 // Never wrapped in Reveal: the headline and Hire button must paint immediately.
 export function Hero() {
   const { hero, site, visible } = getHome();
-  const trust = hero.trustLine.split(" · ");
+  // Accepts "·", "•" or "|" as separators, with or without spaces, and any number of items.
+  const trust = hero.trustLine
+    .split(/\s*[·•|]\s*/)
+    .map((item) => item.trim())
+    .filter(Boolean);
   return (
     <section id="hero" className="relative overflow-clip bg-ink text-on-ink">
       <HeroField />
@@ -28,24 +32,32 @@ export function Hero() {
 
         <div className="hero-plate mt-5 md:mt-8">
           {hero.photo ? (
+            // Capped in height and kept at its own ratio, so a portrait or square photo can't
+            // push the rest of the first screen down.
             <ResponsiveImage
               generated={{ kind: "about", name: "about" }}
               image={hero.photo}
-              sizes="100vw"
-              className="h-auto w-full"
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="mx-auto h-auto max-h-[min(36rem,70vh)] w-auto max-w-full"
+              eager
             />
           ) : (
             <HeroVisual />
           )}
         </div>
 
-        <ul className="mt-5 grid border-t border-ink-line font-mono text-xs text-on-ink-muted sm:grid-cols-3 md:mt-8">
-          {trust.map((item) => (
-            <li key={item} className="border-b border-ink-line py-1.5 sm:border-b-0">
-              {item}
-            </li>
-          ))}
-        </ul>
+        {trust.length > 0 && (
+          <ul className="mt-5 flex flex-col font-mono text-xs text-on-ink-muted sm:flex-row sm:flex-wrap md:mt-8">
+            {trust.map((item, index) => (
+              <li
+                key={`${index}-${item}`}
+                className="border-t border-ink-line py-1.5 sm:flex-[1_1_14rem] sm:pr-2"
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       <div aria-hidden className="ruler text-ink-line" />
     </section>
